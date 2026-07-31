@@ -1,0 +1,9 @@
+﻿{
+  "name": "universal-qwen-agentic-harness",
+  "version": "1.0.0",
+  "description": "ECC-style multi-agent harness for Qwen Code.",
+  "skills": "skills",
+  "agents": "agents",
+  "commands": "commands",
+  "hooks": "hooks"
+}

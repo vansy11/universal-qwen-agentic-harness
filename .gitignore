@@ -1,0 +1,4 @@
+.env
+.qwen/settings.json
+*.db
+node_modules/
