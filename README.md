@@ -21,7 +21,10 @@ Git (for version control and GitHub integration)
 
 Installation & Setup (Windows / Universal)
 Clone the Repository
-git clone https://github.com/YOUR_USERNAME/universal-qwen-agentic-harness.gitcd universal-qwen-agentic-harness
+git clone https://github.com/vansy11/universal-qwen-agentic-harness
+universal-qwen-agentic-harness.gitcd 
+universal-qwen-agentic-harness
+
 Install MCP Server Dependencies
 Install the required global Node packages for the AI's external tools:
 
@@ -65,4 +68,4 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-Built with ❤️ using Qwen Code
+Built By Vansy using Qwen Code
