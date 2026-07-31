@@ -1,6 +1,19 @@
 ﻿Universal Qwen Agentic Harness
-An interactive CLI-based AI agent system inspired by ECC (Everything Claude Code), OpenClaw, and Hermes. This project transforms standard Qwen Code into a Virtual Tech Company inside your terminal, using an Orchestrator-Worker architecture driven by native hooks to delegate tasks to specialized AI agents.
+An interactive CLI-based AI agent system inspired by ECC, OpenClaw, and Hermes.
 
+This project transforms standard Qwen Code into a Virtual Tech Company inside your terminal, using an Orchestrator-Worker architecture driven by native hooks to intelligently delegate tasks to specialized AI agents.
+
+Node.jsQwen CodeLicense: MITMade by Vansy
+
+Table of Contents
+ Key Features
+ System Prerequisites
+ Installation & Setup
+ Usage Examples
+ Project Structure
+ Contributing
+ License
+ 
 Key Features
 Intelligent Prompt Routing: A lightweight hook automatically scans prompt complexity. Light prompts are answered directly; heavy prompts are decomposed and delegated to specialized sub-agents.
 18 Specialized Agents: Pre-configured agents for Backend, Frontend, Database, UI/UX, Animation, Cybersecurity, DevOps, Finance, Quant Trading, and more.
@@ -11,23 +24,17 @@ security-check.js: Blocks dangerous shell commands (e.g., rm -rf).
 quality-gate.js: Anti-AI-Slop enforcer that rejects robotic phrasing and forces human-like rewrites.
 7 MCP Server Integrations: Connects AI to Tavily, Exa, GitHub, Filesystem, Memory, Fetch, and Sequential-Thinking.
 Multi-Provider Support: Easily switch between DashScope (Alibaba), OpenAI, Moonshot, and OpenRouter within the configuration.
-
 System Prerequisites
 Before installing this harness, ensure your system has the following installed:
 
 Node.js (Required for MCP servers and Universal Hooks)
 Qwen Code CLI
 Git (for version control and GitHub integration)
-
-Installation & Setup (Windows / Universal)
+Installation & Setup
 Clone the Repository
-git clone https://github.com/vansy11/universal-qwen-agentic-harness
-universal-qwen-agentic-harness.gitcd 
-universal-qwen-agentic-harness
-
+git clone https://github.com/vansy11/universal-qwen-agentic-harness.gitcd universal-qwen-agentic-harness
 Install MCP Server Dependencies
 Install the required global Node packages for the AI's external tools:
-
 npm install -g @modelcontextprotocol/server-github @modelcontextprotocol/server-filesystem @modelcontextprotocol/server-memory @modelcontextprotocol/server-sequential-thinking @kazuph/mcp-fetch tavily-mcp exa-mcp-server
 
 Configure API Keys
@@ -41,18 +48,19 @@ Usage Examples
 Once the system is running, you can interact with it naturally. The hooks will automatically route your requests.
 
 Example 1: Heavy Full-Stack Task
-
 "Build a modern bio-data website with loading animations, create an SQL database to store the data, and design the backend API for it."
 
-System Behavior: The router detects a heavy task -> Invokes fullstack-orchestrator -> Delegates to database-architect, backend-engineer, frontend-engineer, and animation-engineer -> Runs quality-gate before final output.
+System Behavior:
+The router detects a heavy task ➔ Invokes fullstack-orchestrator ➔ Delegates to database-architect, backend-engineer, frontend-engineer, and animation-engineer ➔ Runs quality-gate before final output.
 
 Example 2: Using Slash Commands
 Force specific agent delegation instantly using built-in commands:
-
-/fullstack : Run the full-stack chain (DB -> Backend -> Frontend).
-/research : Force the web-researcher agent to search the internet.
-/pentest : Run a security scan on the current codebase.
-/git-push : Safely commit and push the project to a new GitHub repo.
+| Command | Description |
+| :--- | :--- |
+| `/fullstack` | Run the full-stack chain (DB ➔ Backend ➔ Frontend). |
+| `/research` | Force the web-researcher agent to search the internet. |
+| `/pentest` | Run a security scan on the current codebase. |
+| `/git-push` | Safely commit and push the project to a new GitHub repo. |
 
 Project Structure
 .qwen/
@@ -68,4 +76,7 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-Built By Vansy using Qwen Code
+<div align="center">
+Built by <strong>Vansy</strong> using Qwen Code
+</div>
+```
