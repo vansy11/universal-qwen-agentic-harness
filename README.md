@@ -75,7 +75,7 @@ graph TD
     F & G & H & I --> J{quality-gate.js Hook}
     J -->|AI Slop Detected| K[humanizer-agent]
     K --> J
-    J -->|Clean Output| L[✅ Final Output to User]
+    J -->|Clean Output| L[Final Output to User]
 Core Components
 18 Specialized Agents
 <br>
