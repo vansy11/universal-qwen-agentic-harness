@@ -1,5 +1,4 @@
-﻿
-     Universal Qwen Agentic Harness
+﻿     Universal Qwen Agentic Harness
 An interactive CLI-based AI agent system inspired by ECC, OpenClaw, and Hermes.
 
 This project transforms standard Qwen Code into a Virtual Tech Company inside your terminal, using an Orchestrator-Worker architecture driven by native hooks to intelligently delegate tasks to specialized AI agents.
@@ -19,6 +18,7 @@ Architecture Flow
 This system uses an Orchestrator-Worker architecture. Below is the visual flow of how a prompt is processed automatically by the hooks and agents.
 
 graph TD    A[👤 User Prompt] --> B{prompt-router.js}    B -->|Light Prompt| C[🤖 Direct AI Response]    B -->|Heavy Prompt| D[orchestrator-agent]    D --> E[context-builder]    E --> F[database-architect]    E --> G[backend-engineer]    E --> H[frontend-engineer]    E --> I[animation-engineer]    F & G & H & I --> J{quality-gate.js}    J -->|AI Slop Detected| K[humanizer-agent]    K --> J    J -->|Clean Output| L[✅ Final Output to User]
+
 Key Features
 Intelligent Prompt Routing: A lightweight hook automatically scans prompt complexity. Light prompts are answered directly; heavy prompts are decomposed and delegated to specialized sub-agents.
 18 Specialized Agents: Pre-configured agents for Backend, Frontend, Database, UI/UX, Animation, Cybersecurity, DevOps, Finance, Quant Trading, and more.
@@ -29,12 +29,14 @@ security-check.js: Blocks dangerous shell commands (e.g., rm -rf).
 quality-gate.js: Anti-AI-Slop enforcer that rejects robotic phrasing and forces human-like rewrites.
 7 MCP Server Integrations: Connects AI to Tavily, Exa, GitHub, Filesystem, Memory, Fetch, and Sequential-Thinking.
 Multi-Provider Support: Easily switch between DashScope (Alibaba), OpenAI, Moonshot, and OpenRouter within the configuration.
+
 System Prerequisites
 Before installing this harness, ensure your system has the following installed:
 
 Node.js (Required for MCP servers and Universal Hooks)
 Qwen Code CLI
 Git (for version control and GitHub integration)
+
 Installation & Setup
 Clone the Repository
 bash
@@ -54,6 +56,7 @@ Launch the interactive terminal from the root of this project:
 bash
 
 qwen
+
 Usage Examples
 Once the system is running, you can interact with it naturally. The hooks will automatically route your requests.
 
@@ -75,8 +78,31 @@ Description
 
 Project Inventory
 Click to view 18 Specialized Agents
+Management: context-builder, fullstack-orchestrator, memory-curator, humanizer
+Programming: database-architect, backend-engineer, frontend-engineer, ui-ux-designer, animation-engineer, code-reviewer
+Infrastructure: cybersecurity-analyst, network-engineer, devops-engineer
+Research: web-researcher, news-trending-scout, social-media-analyst
+Finance: finance-analyst, quant-algo-engineer
+
 Click to view 24 Technical Skills
+AI Core: ai-humanizer-anti-slop, ai-memory-curator, prompt-router
+Programming: backend-api-design, database-ssd-design, frontend-react-tailwind, ui-animation-gsap-framer, api-doc-generator
+Security: cybersecurity-pentest, cybersecurity-vuln-scan, code-review-security
+DevOps: docker-deployment, github-workflow, network-diagnostics
+Research: web-research-deep, news-trending-aggregator, api-integration-exa-tavily, social-media-monitor
+Finance: finance-analysis, quant-algo-trading
+System: fullstack-orchestration, workflow-automation
+
 View Project Structure
+text
+
+.qwen/
+├── agents/          # 18 AI specialist agents (YAML frontmatter + system prompts)
+├── commands/        # 12 Slash command shortcuts
+├── hooks/           # 3 Universal Node.js hooks (Router, Security, Quality Gate)
+├── skills/          # 24 Technical skill guidelines (Progressive disclosure)
+└── settings.json    # Core configuration (Models, MCP servers, Hooks, API Keys)
+
 Contributing
 Contributions, issues, and feature requests are welcome! Feel free to check the issues page if you want to add new agents, skills, or MCP integrations.
 
@@ -86,4 +112,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 <div align="center">
 Built by <strong>Vansy</strong> using Qwen Code
 </div>
-```
