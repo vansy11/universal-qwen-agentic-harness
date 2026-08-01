@@ -1,90 +1,94 @@
-﻿     Universal Qwen Agentic Harness
-An interactive CLI-based AI agent system inspired by ECC, OpenClaw, and Hermes.
+﻿Universal Qwen Agentic Harness
+The Agent Harness Performance Optimization System for Qwen Code
 
-This project transforms standard Qwen Code into a Virtual Tech Company inside your terminal, using an Orchestrator-Worker architecture driven by native hooks to intelligently delegate tasks to specialized AI agents.
+Node.jsQwen CodeMIT licenseVansy
 
-Node.jsQwen CodeLicense: MITMade by Vansy
+ShellTypeScriptPythonMarkdown
 
-Table of Contents
-Architecture Flow
-Key Features
-System Prerequisites
-Installation & Setup
-Usage Examples
-Project Inventory
-Contributing
-License
+[!WARNING]Configure API Keys Securely. This harness integrates with external APIs (DashScope, Tavily, GitHub, etc.). Never hardcode API keys in your repository. Always use the .qwen/settings.json environment block or system environment variables.
+
+Quickstart
+Get up and running in 2 minutes	Architecture
+How the Orchestrator-Worker system functions	Components
+18 Agents, 24 Skills, 3 Hooks, 7 MCPs
+Universal Qwen Agentic Harness
+Your agent can write code, but this harness gives it a coordinated engineering system and toolbox: it plans before it builds, delegates tasks to specialized sub-agents, reviews its own work from a fresh context, and enforces quality gates.
+
+prompt -> route -> orchestrate -> delegate -> verify -> humanize -> output
+Instead of rebuilding this process in every prompt, you install it once and make it part of how your agent works.
+
+Optimize the context window. Persist everything else.
+
+This harness is MIT-licensed open source. It works natively with Qwen Code CLI, using an Orchestrator-Worker architecture driven by Universal Node.js Hooks.
+
+Quickstart
+Get up and running in less than 2 minutes.
+
+bash
+
+# 1. Clone the repository
+git clone https://github.com/vansy11/universal-qwen-agentic-harness.git
+cd universal-qwen-agentic-harness
+
+# 2. Install MCP Server dependencies globally
+npm install -g @modelcontextprotocol/server-github @modelcontextprotocol/server-filesystem @modelcontextprotocol/server-memory @modelcontextprotocol/server-sequential-thinking @kazuph/mcp-fetch tavily-mcp exa-mcp-server
+
+# 3. Configure your API Keys
+# Rename settings.example.json to .qwen/settings.json
+# Open it and replace the placeholder values in the "env" block with your actual keys
+
+# 4. Run Qwen Code
+qwen
+Advanced Configuration
+Multi-Provider Support
+You can easily switch between DashScope (Alibaba), OpenAI, Moonshot, and OpenRouter within the settings.json configuration.
+
+json
+
+{
+  "modelProviders": {
+    "bailian": {
+      "type": "openai",
+      "baseURL": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "apiKeyEnv": "DASHSCOPE_API_KEY",
+      "models": {
+        "deepseek-v3.2": { "contextWindow": 128000, "maxTokens": 8192 }
+      }
+    }
+  }
+}
+Universal Node.js Hooks
+The hooks are written in pure Node.js (.js) rather than PowerShell (.ps1) to ensure 100% cross-platform compatibility (Windows, macOS, Linux) without execution policy issues.
+
 Architecture Flow
 This system uses an Orchestrator-Worker architecture. Below is the visual flow of how a prompt is processed automatically by the hooks and agents.
 
-graph TD    A[👤 User Prompt] --> B{prompt-router.js}    B -->|Light Prompt| C[🤖 Direct AI Response]    B -->|Heavy Prompt| D[orchestrator-agent]    D --> E[context-builder]    E --> F[database-architect]    E --> G[backend-engineer]    E --> H[frontend-engineer]    E --> I[animation-engineer]    F & G & H & I --> J{quality-gate.js}    J -->|AI Slop Detected| K[humanizer-agent]    K --> J    J -->|Clean Output| L[✅ Final Output to User]
+graph TD
+    A[User Prompt] --> B{prompt-router.js Hook}
+    B -->|Light Prompt| C[Direct AI Response]
+    B -->|Heavy Prompt| D[fullstack-orchestrator]
+    D --> E[context-builder]
+    E --> F[database-architect]
+    E --> G[backend-engineer]
+    E --> H[frontend-engineer]
+    E --> I[animation-engineer]
+    F & G & H & I --> J{quality-gate.js Hook}
+    J -->|AI Slop Detected| K[humanizer-agent]
+    K --> J
+    J -->|Clean Output| L[✅ Final Output to User]
+Core Components
+18 Specialized Agents
+<br>
 
-Key Features
-Intelligent Prompt Routing: A lightweight hook automatically scans prompt complexity. Light prompts are answered directly; heavy prompts are decomposed and delegated to specialized sub-agents.
-18 Specialized Agents: Pre-configured agents for Backend, Frontend, Database, UI/UX, Animation, Cybersecurity, DevOps, Finance, Quant Trading, and more.
-24 Technical Skills: Progressive disclosure guidelines that provide agents with specific architectural patterns (e.g., ERD Generation, React/Tailwind standards, OWASP Pentest).
-3 Universal Node.js Hooks:
-prompt-router.js: Analyzes prompts and maps them to target agents.
-security-check.js: Blocks dangerous shell commands (e.g., rm -rf).
-quality-gate.js: Anti-AI-Slop enforcer that rejects robotic phrasing and forces human-like rewrites.
-7 MCP Server Integrations: Connects AI to Tavily, Exa, GitHub, Filesystem, Memory, Fetch, and Sequential-Thinking.
-Multi-Provider Support: Easily switch between DashScope (Alibaba), OpenAI, Moonshot, and OpenRouter within the configuration.
-
-System Prerequisites
-Before installing this harness, ensure your system has the following installed:
-
-Node.js (Required for MCP servers and Universal Hooks)
-Qwen Code CLI
-Git (for version control and GitHub integration)
-
-Installation & Setup
-Clone the Repository
-bash
-
-git clone https://github.com/vansy11/universal-qwen-agentic-harness.git
-cd universal-qwen-agentic-harness
-Install MCP Server Dependencies
-Install the required global Node packages for the AI's external tools:
-powershell
-
-npm install -g @modelcontextprotocol/server-github @modelcontextprotocol/server-filesystem @modelcontextprotocol/server-memory @modelcontextprotocol/server-sequential-thinking @kazuph/mcp-fetch tavily-mcp exa-mcp-server
-Configure API Keys
-Rename settings.example.json to .qwen/settings.json.
-Open .qwen/settings.json and replace the placeholder values in the "env" block with your actual API keys (DashScope, Tavily, GitHub, etc.).
-Run Qwen Code
-Launch the interactive terminal from the root of this project:
-bash
-
-qwen
-
-Usage Examples
-Once the system is running, you can interact with it naturally. The hooks will automatically route your requests.
-
-Example 1: Heavy Full-Stack Task
-"Build a modern bio-data website with loading animations, create an SQL database to store the data, and design the backend API for it."
-
-System Behavior:
-The router detects a heavy task ➔ Invokes fullstack-orchestrator ➔ Delegates to database-architect, backend-engineer, frontend-engineer, and animation-engineer ➔ Runs quality-gate before final output.
-
-Example 2: Using Slash Commands
-Force specific agent delegation instantly using built-in commands:
-
-Command
-Description
-/fullstack	Run the full-stack chain (DB ➔ Backend ➔ Frontend).
-/research	Force the web-researcher agent to search the internet.
-/pentest	Run a security scan on the current codebase.
-/git-push	Safely commit and push the project to a new GitHub repo.
-
-Project Inventory
-Click to view 18 Specialized Agents
 Management: context-builder, fullstack-orchestrator, memory-curator, humanizer
 Programming: database-architect, backend-engineer, frontend-engineer, ui-ux-designer, animation-engineer, code-reviewer
 Infrastructure: cybersecurity-analyst, network-engineer, devops-engineer
 Research: web-researcher, news-trending-scout, social-media-analyst
 Finance: finance-analyst, quant-algo-engineer
 
-Click to view 24 Technical Skills
+24 Technical Skills
+<br>
+
 AI Core: ai-humanizer-anti-slop, ai-memory-curator, prompt-router
 Programming: backend-api-design, database-ssd-design, frontend-react-tailwind, ui-animation-gsap-framer, api-doc-generator
 Security: cybersecurity-pentest, cybersecurity-vuln-scan, code-review-security
@@ -93,15 +97,35 @@ Research: web-research-deep, news-trending-aggregator, api-integration-exa-tavil
 Finance: finance-analysis, quant-algo-trading
 System: fullstack-orchestration, workflow-automation
 
-View Project Structure
-text
+3 Universal Node.js Hooks
+<br>
 
-.qwen/
-├── agents/          # 18 AI specialist agents (YAML frontmatter + system prompts)
-├── commands/        # 12 Slash command shortcuts
-├── hooks/           # 3 Universal Node.js hooks (Router, Security, Quality Gate)
-├── skills/          # 24 Technical skill guidelines (Progressive disclosure)
-└── settings.json    # Core configuration (Models, MCP servers, Hooks, API Keys)
+prompt-router.js: Analyzes prompt complexity and maps tasks to target agents.
+security-check.js: PreToolUse hook to block dangerous shell commands (e.g., rm -rf).
+quality-gate.js: Stop hook that acts as an Anti-AI-Slop enforcer, rejecting robotic phrasing and forcing human-like rewrites.
+
+7 MCP Server Integrations
+<br>
+
+tavily: Real-time web search and news.
+exa: Semantic search for code and academic research.
+github: Repository management, PRs, and issues.
+filesystem: Secure local file read/write access.
+fetch: Raw URL content retrieval (web scraping).
+memory: Knowledge graph for long-term AI memory.
+sequential-thinking: Complex problem decomposition tool.
+
+Slash Commands
+Force specific agent delegation instantly using built-in commands:
+
+Command
+Description
+/fullstack	Run the full-stack chain (DB ➔ Backend ➔ Frontend ➔ Animation).
+/research	Force the web-researcher agent to search the internet.
+/pentest	Run a security scan on the current codebase.
+/git-push	Safely commit and push the project to a new GitHub repo.
+/humanize	Clean up the AI's last response to sound more human.
+/quant	Build and backtest a trading strategy.
 
 Contributing
 Contributions, issues, and feature requests are welcome! Feel free to check the issues page if you want to add new agents, skills, or MCP integrations.
