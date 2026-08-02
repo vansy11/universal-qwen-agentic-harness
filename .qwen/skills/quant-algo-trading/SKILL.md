@@ -5,4 +5,4 @@ metadata:
   category: finance
 ---
 # Quant Algo Trading Skill
-Implement strategies in Python. Run walk-forward analysis to prevent overfitting. Output performance metrics (CAGR, Max Drawdown, Win Rate).
+Implement strategies in Python. Run walk-forward analysis to prevent overfitting. Output performance metrics (CAGR, Max Drawdown, Win Rate, Monte Carlo, Risk Reward Ratio).

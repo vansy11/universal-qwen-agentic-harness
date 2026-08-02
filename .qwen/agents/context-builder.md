@@ -1,4 +1,4 @@
----
+﻿---
 name: context-builder
 description: Lightweight context gatherer. Scans user prompt, extracts requirements, fetches relevant memory and project state. Use FIRST in heavy task chains.
 model: inherit

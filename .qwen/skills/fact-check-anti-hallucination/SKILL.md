@@ -21,7 +21,7 @@ If you encounter an unknown term or link:
 3. **Admit Ignorance:** If web search yields no clear results, explicitly tell the user: "I cannot find a verified definition for this term. Could you explain what it means so I can save it to my memory?"
 
 ## 3. Creating New Skills from User Corrections
-If the user corrects your hallucination (e.g., "IVB means Initial Volume Breakout"):
+If the user corrects your hallucination :
 1. Acknowledge the mistake immediately.
 2. Invoke the memory-curator agent to save this correction to long-term memory.
 3. Create a new SKILL.md file in .qwen/skills/ documenting this new definition so you never guess it wrong again.
