@@ -292,13 +292,37 @@ Check that `prompt-router.js` is registered as a PreToolUse hook. Heavy prompts 
 
 ---
 
-## Contributing
+## Features
 
-Contributions, issues, and feature requests are welcome. Check the issues page if you want to add new agents, skills, or MCP integrations.
+- **18 specialized agents** spanning management, programming, infrastructure, research, and finance
+- **24 technical skills** for rapid development across AI, security, DevOps, and full-stack workflows
+- **3 universal hooks** for automatic prompt routing, security enforcement, and quality gating
+- **7 MCP integrations** covering web search, GitHub, filesystem, memory, and reasoning
+
+## Installation
+
+```bash
+git clone https://github.com/vansy11/universal-qwen-agentic-harness.git
+npm install -g @modelcontextprotocol/server-github @modelcontextprotocol/server-filesystem @modelcontextprotocol/server-memory @modelcontextprotocol/server-sequential-thinking @kazuph/mcp-fetch tavily-mcp exa-mcp-server
+```
+
+Configure API keys in `.qwen/settings.json` and run `qwen` to activate the harness.
+
+## Commands
+
+| Command | Description |
+|---|---|
+| `/fullstack` | End-to-end app generation (database → backend → frontend → animation) |
+| `/research` | Deep web research with cross-source verification |
+| `/pentest` | Vulnerability scan with OWASP Top 10 checklist |
+| `/deploy` | Generate Dockerfile + docker-compose with health checks |
+| `/erd` | Generate Entity-Relationship Diagram for current database |
+| `/quant` | Build and backtest quantitative trading strategies |
+| `/simplify` | Post-implementation cleanup pass on recent changes |
 
 ## License
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+MIT License — see `LICENSE` for details.
 
 <div align="center">
 

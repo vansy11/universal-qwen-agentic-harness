@@ -5,16 +5,18 @@
   },
   "$version": 4,
   "env": {
-    "DASHSCOPE_API_KEY": "YOUR_DASHSCOPE_API_KEY",
-    "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY",
-    "OPENAI_BASE_URL": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-    "TAVILY_API_KEY": "YOUR_TAVILY_API_KEY",
-    "EXA_API_KEY": "YOUR_EXA_API_KEY",
-    "SHODAN_API_KEY": "YOUR_SHODAN_API_KEY",
-    "GITHUB_TOKEN": "YOUR_GITHUB_TOKEN"
+    "DASHSCOPE_API_KEY": " ",
+    "OPENAI_API_KEY": " ",
+    "OPENAI_BASE_URL": " ",
+    "TAVILY_API_KEY": " ",
+    "EXA_API_KEY": " ",
+    "SHODAN_API_KEY": " ",
+    "GITHUB_TOKEN": " ",
+    "BRAVE_API_KEY": " ",
+    "FIRECRAWL_API_KEY": " "
   },
   "model": {
-    "name": "deepseek-v3.2"
+    "name": "qwen3.5-flash"
   },
   "modelProviders": {
     "bailian": {
@@ -22,7 +24,7 @@
       "baseURL": "https://dashscope.aliyuncs.com/compatible-mode/v1",
       "apiKeyEnv": "DASHSCOPE_API_KEY",
       "models": {
-        "deepseek-v3.2": { "contextWindow": 128000, "maxTokens": 8192 },
+        "qwen3.5-flash": { "contextWindow": 128000, "maxTokens": 8192 },
         "deepseek-v4-flash": { "contextWindow": 128000, "maxTokens": 8192 },
         "deepseek-v4-pro": { "contextWindow": 128000, "maxTokens": 8192 },
         "qwen3.7-plus": { "contextWindow": 128000, "maxTokens": 8192 },
@@ -33,15 +35,15 @@
     },
     "custom-openai": {
       "type": "openai",
-      "baseURL": "https://your-custom-openai-endpoint.com/v1",
+      "baseURL": "https://ws-9ff66cpzdiijb2on.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
       "apiKeyEnv": "OPENAI_API_KEY",
       "models": {
-        "your-custom-model": { "contextWindow": 128000, "maxTokens": 8192 }
+        "qwen3.5-flash": { "contextWindow": 128000, "maxTokens": 8192 }
       }
     }
   },
   "permissions": {
-    "allow": [ "read_file", "grep_search", "glob", "list_directory" ],
+    "allow": [ "read_file", "grep_search", "glob", "list_directory", "mcp__tavily__tavily_search" ],
     "ask": [ "write_file", "edit_file", "run_shell_command" ],
     "deny": [ "rm -rf", "git push --force", "curl* | sh", "> /dev/sda" ]
   },
@@ -51,7 +53,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ${QWEN_PROJECT_DIR}/.qwen/hooks/prompt-router.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/prompt-router.js",
             "name": "prompt-router",
             "timeout": 15000
           }
@@ -64,8 +66,27 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ${QWEN_PROJECT_DIR}/.qwen/hooks/security-check.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/security-check.js",
             "name": "security-check",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "write_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node C:/Users/vansy/.qwen/hooks/lint-check.js",
+            "name": "lint-check",
+            "timeout": 5000
+          },
+          {
+            "type": "command",
+            "command": "node C:/Users/vansy/.qwen/hooks/auto-format.js",
+            "name": "auto-format",
             "timeout": 5000
           }
         ]
@@ -76,8 +97,14 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ${QWEN_PROJECT_DIR}/.qwen/hooks/quality-gate.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/quality-gate.js",
             "name": "quality-gate",
+            "timeout": 10000
+          },
+          {
+            "type": "command",
+            "command": "node C:/Users/vansy/.qwen/hooks/auto-memory.js",
+            "name": "auto-memory",
             "timeout": 10000
           }
         ]
@@ -87,31 +114,80 @@
   "mcpServers": {
     "tavily": {
       "command": "npx",
-      "args": [ "-y", "tavily-mcp@latest" ]
+      "args": [ "-y", "tavily-mcp@latest" ],
+      "description": "Real-time web search and news optimized for AI"
     },
     "exa": {
       "command": "npx",
-      "args": [ "-y", "exa-mcp-server@latest" ]
+      "args": [ "-y", "exa-mcp-server@latest" ],
+      "description": "Semantic search for code, academic research, and deep content"
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+      "description": "Privacy-focused web search (2,000 free queries/month)"
+    },
+    "web-research": {
+      "command": "npx",
+      "args": [ "-y", "@mzxrai/mcp-webresearch@latest" ],
+      "description": "Automated web research via headless browser (scraping and summarizing)"
     },
     "github": {
       "command": "npx",
-      "args": [ "-y", "@modelcontextprotocol/server-github" ]
+      "args": [ "-y", "@modelcontextprotocol/server-github" ],
+      "description": "GitHub operations - repo management, PRs, issues, Actions"
     },
     "filesystem": {
       "command": "npx",
-      "args": [ "-y", "@modelcontextprotocol/server-filesystem", "./" ]
+      "args": [ "-y", "@modelcontextprotocol/server-filesystem", "./" ],
+      "description": "Secure local file read/write access"
     },
     "fetch": {
       "command": "npx",
-      "args": [ "-y", "@kazuph/mcp-fetch" ]
+      "args": [ "-y", "@kazuph/mcp-fetch" ],
+      "description": "Raw URL content retrieval (basic web scraping) + Jina AI proxy (r.jina.ai)"
     },
     "memory": {
       "command": "npx",
-      "args": [ "-y", "@modelcontextprotocol/server-memory" ]
+      "args": [ "-y", "@modelcontextprotocol/server-memory" ],
+      "description": "Local knowledge graph for persistent long-term AI memory"
     },
     "sequential-thinking": {
       "command": "npx",
-      "args": [ "-y", "@modelcontextprotocol/server-sequential-thinking" ]
+      "args": [ "-y", "@modelcontextprotocol/server-sequential-thinking" ],
+      "description": "Complex problem decomposition and chain-of-thought reasoning"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp", "--browser", "chrome"],
+      "description": "Browser automation and E2E testing via headless Chrome"
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "description": "Live documentation lookup for frontend/backend libraries"
+    },
+    "magic": {
+      "command": "npx",
+      "args": ["-y", "@magicuidesign/mcp@latest"],
+      "description": "Magic UI components for premium frontend animations and design"
+    },
+    "vercel": {
+      "type": "http",
+      "url": "https://mcp.vercel.com",
+      "description": "Cloud deployment and project management for web apps"
+    },
+    "firecrawl": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": {
+        "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}"
+      },
+      "description": "Advanced web scraping and crawling"
+    },
+    "Parallel Search MCP": {
+      "command": "npx",
+      "args": [ "-y","mcp-remote","https://search.parallel.ai/mcp"]
     }
   },
   "security": {
@@ -120,3 +196,7 @@
     }
   }
 }
+
+
+ 
+   
