@@ -1,4 +1,4 @@
-﻿---
+---
 name: fullstack-orchestrator
 description: Full-stack coordinator. When user requests a complete app, this agent sequences: database-architect -> backend-engineer -> frontend-engineer -> animation-engineer -> humanizer.
 model: inherit

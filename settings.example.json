@@ -1,11 +1,49 @@
-{
+﻿{
   "$schema": "https://qwen-code.alibaba.com/schemas/settings.json",
+  "ui": {
+    "autoModeAcknowledged": true
+  },
+  "$version": 4,
   "env": {
     "DASHSCOPE_API_KEY": "YOUR_DASHSCOPE_API_KEY",
     "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY",
+    "OPENAI_BASE_URL": "https://dashscope.aliyuncs.com/compatible-mode/v1",
     "TAVILY_API_KEY": "YOUR_TAVILY_API_KEY",
     "EXA_API_KEY": "YOUR_EXA_API_KEY",
+    "SHODAN_API_KEY": "YOUR_SHODAN_API_KEY",
     "GITHUB_TOKEN": "YOUR_GITHUB_TOKEN"
+  },
+  "model": {
+    "name": "deepseek-v3.2"
+  },
+  "modelProviders": {
+    "bailian": {
+      "type": "openai",
+      "baseURL": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "apiKeyEnv": "DASHSCOPE_API_KEY",
+      "models": {
+        "deepseek-v3.2": { "contextWindow": 128000, "maxTokens": 8192 },
+        "deepseek-v4-flash": { "contextWindow": 128000, "maxTokens": 8192 },
+        "deepseek-v4-pro": { "contextWindow": 128000, "maxTokens": 8192 },
+        "qwen3.7-plus": { "contextWindow": 128000, "maxTokens": 8192 },
+        "kimi-k2.7-code": { "contextWindow": 128000, "maxTokens": 8192 },
+        "glm-5.1": { "contextWindow": 128000, "maxTokens": 8192 },
+        "glm-5.2": { "contextWindow": 128000, "maxTokens": 8192 }
+      }
+    },
+    "custom-openai": {
+      "type": "openai",
+      "baseURL": "https://your-custom-openai-endpoint.com/v1",
+      "apiKeyEnv": "OPENAI_API_KEY",
+      "models": {
+        "your-custom-model": { "contextWindow": 128000, "maxTokens": 8192 }
+      }
+    }
+  },
+  "permissions": {
+    "allow": [ "read_file", "grep_search", "glob", "list_directory" ],
+    "ask": [ "write_file", "edit_file", "run_shell_command" ],
+    "deny": [ "rm -rf", "git push --force", "curl* | sh", "> /dev/sda" ]
   },
   "hooks": {
     "UserPromptSubmit": [
@@ -41,12 +79,6 @@
             "command": "node ${QWEN_PROJECT_DIR}/.qwen/hooks/quality-gate.js",
             "name": "quality-gate",
             "timeout": 10000
-          },
-          {
-            "type": "command",
-            "command": "node ${QWEN_PROJECT_DIR}/.qwen/hooks/auto-memory.js",
-            "name": "auto-memory",
-            "timeout": 15000
           }
         ]
       }
@@ -80,6 +112,11 @@
     "sequential-thinking": {
       "command": "npx",
       "args": [ "-y", "@modelcontextprotocol/server-sequential-thinking" ]
+    }
+  },
+  "security": {
+    "auth": {
+      "selectedType": "openai"
     }
   }
 }

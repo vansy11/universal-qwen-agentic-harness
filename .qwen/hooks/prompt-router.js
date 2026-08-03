@@ -23,10 +23,10 @@ process.stdin.on('end', () => {
         
         if (complexity === "heavy" && agents.length === 0) agents.push("fullstack-orchestrator");
         
-        // Suntikkan Aturan Anti-AI Slop SEBELUM AI menjawab untuk mencegah double output
-        const antiSlopRule = "CRITICAL OUTPUT RULE: Do NOT use AI filler phrases. Do not start with 'Here is', 'Certainly', 'I would be happy to', or 'Sure!'. Be direct, professional, and human-like from the very first word.";
+        // Suntikkan Aturan Anti-AI Slop & Smart Compression di awal
+        const compressionRule = "CRITICAL SYSTEM RULES:\n1. ZERO FLUFF: Do not use filler phrases (e.g., 'Here is', 'Certainly'). Start immediately with the answer.\n2. CODE > TEXT: Provide ONLY code blocks with a 1-sentence comment. Do not explain line-by-line unless asked.\n3. CONTEXT ISOLATION: Instruct sub-agents to return ONLY final file content or a 3-bullet summary.";
         
-        const additionalContext = "[ROUTER ANALYSIS]\nComplexity: " + complexity + "\nTarget agents: " + agents.join(', ') + "\n@if heavy: Use Task tool to delegate. context-builder runs FIRST, humanizer runs LAST.\n@if light: Answer directly.\n\n" + antiSlopRule;
+        const additionalContext = "[ROUTER ANALYSIS]\nComplexity: " + complexity + "\nTarget agents: " + agents.join(', ') + "\n@if heavy: Use Task tool to delegate.\n@if light: Answer directly.\n\n" + compressionRule;
         
         const response = { hookSpecificOutput: { hookEventName: "UserPromptSubmit", additionalContext } };
         console.log(JSON.stringify(response));
