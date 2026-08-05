@@ -5,49 +5,105 @@
   },
   "$version": 4,
   "env": {
-    "DASHSCOPE_API_KEY": " ",
-    "OPENAI_API_KEY": " ",
-    "OPENAI_BASE_URL": " ",
-    "TAVILY_API_KEY": " ",
-    "EXA_API_KEY": " ",
-    "SHODAN_API_KEY": " ",
-    "GITHUB_TOKEN": " ",
-    "BRAVE_API_KEY": " ",
-    "FIRECRAWL_API_KEY": " "
+    "DASHSCOPE_API_KEY": "YOUR_DASHSCOPE_API_KEY",
+    "TAVILY_API_KEY": "YOUR_TAVILY_API_KEY",
+    "EXA_API_KEY": "YOUR_EXA_API_KEY",
+    "SHODAN_API_KEY": "YOUR_SHODAN_API_KEY",
+    "GITHUB_TOKEN": "YOUR_GITHUB_PAT",
+    "BRAVE_API_KEY": "YOUR_BRAVE_API_KEY",
+    "FIRECRAWL_API_KEY": "YOUR_FIRECRAWL_API_KEY",
+    "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY",
+    "BAILIAN_TOKEN_PLAN_API_KEY": "YOUR_BAILIAN_TOKEN_PLAN_KEY"
   },
   "model": {
-    "name": "qwen3.5-flash"
+    "name": "gemini-3.5-flash",
+    "baseUrl": "https://generativelanguage.googleapis.com"
   },
   "modelProviders": {
-    "bailian": {
-      "type": "openai",
-      "baseURL": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-      "apiKeyEnv": "DASHSCOPE_API_KEY",
-      "models": {
-        "qwen3.5-flash": { "contextWindow": 128000, "maxTokens": 8192 },
-        "deepseek-v4-flash": { "contextWindow": 128000, "maxTokens": 8192 },
-        "deepseek-v4-pro": { "contextWindow": 128000, "maxTokens": 8192 },
-        "qwen3.7-plus": { "contextWindow": 128000, "maxTokens": 8192 },
-        "kimi-k2.7-code": { "contextWindow": 128000, "maxTokens": 8192 },
-        "glm-5.1": { "contextWindow": 128000, "maxTokens": 8192 },
-        "glm-5.2": { "contextWindow": 128000, "maxTokens": 8192 }
+    "openai": [
+      {
+        "id": "kimi-k2.7-code",
+        "name": "kimi-k2.7-code",
+        "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "envKey": "DASHSCOPE_API_KEY"
+      },
+      {
+        "id": "qwen3-coder-480b-a35b-instruct",
+        "name": "[ModelStudio Standard] qwen3-coder-480b-a35b-instruct",
+        "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+        "envKey": "DASHSCOPE_API_KEY"
+      },
+      {
+        "id": "qwen3.7-plus",
+        "name": "[ModelStudio Standard] qwen3.7-plus",
+        "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+        "envKey": "DASHSCOPE_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 1000000
+        }
+      },
+      {
+        "id": "qwen3.7-max",
+        "name": "[ModelStudio Standard] qwen3.7-max",
+        "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+        "envKey": "DASHSCOPE_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 1000000
+        }
+      },
+      {
+        "id": "qwen3.8-max-preview",
+        "name": "[ModelStudio Token Plan] qwen3.8-max-preview",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "thinkingMandatory": true,
+          "contextWindowSize": 1000000,
+          "modalities": { "image": true, "video": true }
+        }
+      },
+      {
+        "id": "deepseek-v4-pro",
+        "name": "[ModelStudio Token Plan] deepseek-v4-pro",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": { "contextWindowSize": 1000000 }
       }
-    },
-    "custom-openai": {
-      "type": "openai",
-      "baseURL": "https://ws-9ff66cpzdiijb2on.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
-      "apiKeyEnv": "OPENAI_API_KEY",
-      "models": {
-        "qwen3.5-flash": { "contextWindow": 128000, "maxTokens": 8192 }
+    ],
+    "gemini": [
+      {
+        "id": "gemini-3.5-flash",
+        "name": "gemini-3.5-flash",
+        "baseUrl": "https://generativelanguage.googleapis.com",
+        "envKey": "GEMINI_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "modalities": { "image": true, "video": true }
+        }
       }
-    }
+    ]
   },
   "permissions": {
-    "allow": [ "read_file", "grep_search", "glob", "list_directory", "mcp__tavily__tavily_search" ],
-    "ask": [ "write_file", "edit_file", "run_shell_command" ],
-    "deny": [ "rm -rf", "git push --force", "curl* | sh", "> /dev/sda" ]
+    "allow": ["read_file", "grep_search", "glob", "list_directory", "mcp__tavily__tavily_search"],
+    "ask": ["write_file", "edit_file", "run_shell_command"],
+    "deny": ["rm -rf", "git push --force", "curl* | sh", "> /dev/sda"]
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node C:/Users/vansy/.qwen/hooks/session-bootstrap.js",
+            "name": "session-bootstrap",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "hooks": [
@@ -68,6 +124,12 @@
             "type": "command",
             "command": "node C:/Users/vansy/.qwen/hooks/security-check.js",
             "name": "security-check",
+            "timeout": 5000
+          },
+          {
+            "type": "command",
+            "command": "node C:/Users/vansy/.qwen/hooks/trading-risk-guard.js",
+            "name": "trading-risk-guard",
             "timeout": 5000
           }
         ]
@@ -109,17 +171,29 @@
           }
         ]
       }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python C:/Users/vansy/.qwen/core/memory-distiller.py",
+            "name": "memory-distiller",
+            "timeout": 15000
+          }
+        ]
+      }
     ]
   },
   "mcpServers": {
     "tavily": {
       "command": "npx",
-      "args": [ "-y", "tavily-mcp@latest" ],
+      "args": ["-y", "tavily-mcp@latest"],
       "description": "Real-time web search and news optimized for AI"
     },
     "exa": {
       "command": "npx",
-      "args": [ "-y", "exa-mcp-server@latest" ],
+      "args": ["-y", "exa-mcp-server@latest"],
       "description": "Semantic search for code, academic research, and deep content"
     },
     "brave-search": {
@@ -129,32 +203,32 @@
     },
     "web-research": {
       "command": "npx",
-      "args": [ "-y", "@mzxrai/mcp-webresearch@latest" ],
-      "description": "Automated web research via headless browser (scraping and summarizing)"
+      "args": ["-y", "@mzxrai/mcp-webresearch@latest"],
+      "description": "Automated web research via headless browser"
     },
     "github": {
       "command": "npx",
-      "args": [ "-y", "@modelcontextprotocol/server-github" ],
+      "args": ["-y", "@modelcontextprotocol/server-github"],
       "description": "GitHub operations - repo management, PRs, issues, Actions"
     },
     "filesystem": {
       "command": "npx",
-      "args": [ "-y", "@modelcontextprotocol/server-filesystem", "./" ],
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./"],
       "description": "Secure local file read/write access"
     },
     "fetch": {
       "command": "npx",
-      "args": [ "-y", "@kazuph/mcp-fetch" ],
-      "description": "Raw URL content retrieval (basic web scraping) + Jina AI proxy (r.jina.ai)"
+      "args": ["-y", "@kazuph/mcp-fetch"],
+      "description": "Raw URL content retrieval + Jina AI proxy"
     },
     "memory": {
       "command": "npx",
-      "args": [ "-y", "@modelcontextprotocol/server-memory" ],
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
       "description": "Local knowledge graph for persistent long-term AI memory"
     },
     "sequential-thinking": {
       "command": "npx",
-      "args": [ "-y", "@modelcontextprotocol/server-sequential-thinking" ],
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
       "description": "Complex problem decomposition and chain-of-thought reasoning"
     },
     "playwright": {
@@ -170,7 +244,7 @@
     "magic": {
       "command": "npx",
       "args": ["-y", "@magicuidesign/mcp@latest"],
-      "description": "Magic UI components for premium frontend animations and design"
+      "description": "Magic UI components for premium frontend animations"
     },
     "vercel": {
       "type": "http",
@@ -180,23 +254,15 @@
     "firecrawl": {
       "command": "npx",
       "args": ["-y", "firecrawl-mcp"],
-      "env": {
-        "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}"
-      },
+      "env": { "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}" },
       "description": "Advanced web scraping and crawling"
     },
     "Parallel Search MCP": {
       "command": "npx",
-      "args": [ "-y","mcp-remote","https://search.parallel.ai/mcp"]
+      "args": ["-y", "mcp-remote", "https://search.parallel.ai/mcp"]
     }
   },
   "security": {
-    "auth": {
-      "selectedType": "openai"
-    }
+    "auth": { "selectedType": "gemini" }
   }
 }
-
-
- 
-   

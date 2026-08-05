@@ -1,4 +1,9 @@
+# Telemetry & Tmp
+telemetry/
+tmp/
+data/
+projects/
+memories/_project/
 .env
-.qwen/settings.json
+settings.json
 *.db
-node_modules/

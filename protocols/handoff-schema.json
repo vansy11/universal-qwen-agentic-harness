@@ -1,0 +1,9 @@
+{
+  "task_id": "uuid",
+  "from_agent": "string",
+  "to_agent": "string",
+  "task_description": "string",
+  "context_files": ["array_of_paths"],
+  "priority": "low|medium|high|critical",
+  "status": "pending|in_progress|blocked|complete"
+}
