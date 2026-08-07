@@ -8,26 +8,39 @@
   },
   "$version": 4,
   "env": {
-    "DASHSCOPE_API_KEY": "YOUR_DASHSCOPE_KEY",
-    "TAVILY_API_KEY": "YOUR_TAVILY_KEY",
-    "EXA_API_KEY": "YOUR_EXA_KEY",
-    "BRAVE_API_KEY": "YOUR_BRAVE_KEY",
-    "FIRECRAWL_API_KEY": "YOUR_FIRECRAWL_KEY",
-    "GEMINI_API_KEY": "YOUR_GEMINI_KEY",
-    "GITHUB_TOKEN": "YOUR_GITHUB_PAT",
-    "BAILIAN_TOKEN_PLAN_API_KEY": "YOUR_TOKEN_PLAN_KEY"
+    "DASHSCOPE_API_KEY": "YOUR_DASHSCOPE_API_KEY",
+    "TAVILY_API_KEY": "YOUR_TAVILY_API_KEY",
+    "EXA_API_KEY": "YOUR_EXA_API_KEY",
+    "SHODAN_API_KEY": "YOUR_SHODAN_API_KEY",
+    "GITHUB_TOKEN": "YOUR_GITHUB_TOKEN",
+    "BRAVE_API_KEY": "YOUR_BRAVE_API_KEY",
+    "FIRECRAWL_API_KEY": "YOUR_FIRECRAWL_API_KEY",
+    "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY",
+    "BAILIAN_TOKEN_PLAN_API_KEY": "YOUR_BAILIAN_TOKEN_PLAN_API_KEY",
+    "QWEN_CUSTOM_API_KEY_GEMINI_HTTPS_GENERATIVELANGUAGE_GOOGLEAPIS_COM_2204C1361727": "YOUR_GEMINI_API_KEY",
+    "QWEN_CUSTOM_API_KEY_OPENAI_HTTPS_DASHSCOaPE_ALIYUNCS_COM_COMPATIBLE_MODE_V1_9A7BA4A05FA9": "YOUR_DASHSCOPE_API_KEY"
   },
   "model": {
-    "name": "qwen3.7-plus",
+    "name": "qwen3.6-flash-2026-04-16",
     "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
   },
   "modelProviders": {
     "openai": [
       {
-        "id": "kimi-k2.7-code",
-        "name": "kimi-k2.7-code",
-        "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "id": "qwen3.6-flash-2026-04-16",
+        "name": "[ModelStudio Standard] qwen3.6-flash-2026-04-16",
+        "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
         "envKey": "DASHSCOPE_API_KEY"
+      },
+      {
+        "id": "qwen3.6-plus",
+        "name": "[ModelStudio Standard] qwen3.6-plus",
+        "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+        "envKey": "DASHSCOPE_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 1000000
+        }
       },
       {
         "id": "qwen3.7-plus",
@@ -50,6 +63,114 @@
         }
       },
       {
+        "id": "glm-5.1",
+        "name": "[ModelStudio Standard] glm-5.1",
+        "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+        "envKey": "DASHSCOPE_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 202752
+        }
+      },
+      {
+        "id": "deepseek-v4-pro",
+        "name": "[ModelStudio Standard] deepseek-v4-pro",
+        "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+        "envKey": "DASHSCOPE_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 1000000
+        }
+      },
+      {
+        "id": "deepseek-v4-flash",
+        "name": "[ModelStudio Standard] deepseek-v4-flash",
+        "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+        "envKey": "DASHSCOPE_API_KEY",
+        "generationConfig": {
+          "contextWindowSize": 1000000
+        }
+      },
+      {
+        "id": "Qwen3.6-Plus-DogFooding",
+        "name": "[Idealab] Qwen3.6-Plus-DogFooding",
+        "baseUrl": "https://idealab.alibaba-inc.com/api/openai/v1",
+        "envKey": "IDEALAB_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 1000000,
+          "modalities": { "image": true, "video": true }
+        }
+      },
+      {
+        "id": "bailian/deepseek-v4-pro",
+        "name": "[Idealab] bailian/deepseek-v4-pro",
+        "baseUrl": "https://idealab.alibaba-inc.com/api/openai/v1",
+        "envKey": "IDEALAB_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 1000000
+        }
+      },
+      {
+        "id": "bailian/deepseek-v4-flash",
+        "name": "[Idealab] bailian/deepseek-v4-flash",
+        "baseUrl": "https://idealab.alibaba-inc.com/api/openai/v1",
+        "envKey": "IDEALAB_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 1000000
+        }
+      },
+      {
+        "id": "bailian/kimi-k2.6",
+        "name": "[Idealab] bailian/kimi-k2.6",
+        "baseUrl": "https://idealab.alibaba-inc.com/api/openai/v1",
+        "envKey": "IDEALAB_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 262144
+        }
+      },
+      {
+        "id": "kimi-k2.7-code",
+        "name": "kimi-k2.7-code",
+        "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "envKey": "QWEN_CUSTOM_API_KEY_OPENAI_HTTPS_DASHSCOPE_ALIYUNCS_COM_COMPATIBLE_MODE_V1_9A7BA4A05FA9"
+      },
+      {
+        "id": "qwen3.7-plus",
+        "name": "[ModelStudio Token Plan] qwen3.7-plus",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 1000000,
+          "modalities": { "image": true, "video": true }
+        }
+      },
+      {
+        "id": "qwen3.6-plus",
+        "name": "[ModelStudio Token Plan] qwen3.6-plus",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 1000000,
+          "modalities": { "image": true, "video": true }
+        }
+      },
+      {
+        "id": "qwen3.7-max",
+        "name": "[ModelStudio Token Plan] qwen3.7-max",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 1000000
+        }
+      },
+      {
         "id": "qwen3.8-max-preview",
         "name": "[ModelStudio Token Plan] qwen3.8-max-preview",
         "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
@@ -62,19 +183,145 @@
         }
       },
       {
+        "id": "qwen3.6-flash",
+        "name": "[ModelStudio Token Plan] qwen3.6-flash",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 1000000
+        }
+      },
+      {
         "id": "deepseek-v4-pro",
         "name": "[ModelStudio Token Plan] deepseek-v4-pro",
         "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
         "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
-        "generationConfig": { "contextWindowSize": 1000000 }
+        "generationConfig": {
+          "contextWindowSize": 1000000
+        }
+      },
+      {
+        "id": "deepseek-v4-flash",
+        "name": "[ModelStudio Token Plan] deepseek-v4-flash",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "contextWindowSize": 1000000
+        }
+      },
+      {
+        "id": "deepseek-v3.2",
+        "name": "[ModelStudio Token Plan] deepseek-v3.2",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "contextWindowSize": 131072
+        }
+      },
+      {
+        "id": "kimi-k2.7-code",
+        "name": "[ModelStudio Token Plan] kimi-k2.7-code",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY"
+      },
+      {
+        "id": "kimi-k2.6",
+        "name": "[ModelStudio Token Plan] kimi-k2.6",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 262144
+        }
+      },
+      {
+        "id": "kimi-k2.5",
+        "name": "[ModelStudio Token Plan] kimi-k2.5",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 262144,
+          "modalities": { "image": true, "video": true }
+        }
+      },
+      {
+        "id": "glm-5.2",
+        "name": "[ModelStudio Token Plan] glm-5.2",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 1000000
+        }
+      },
+      {
+        "id": "glm-5.1",
+        "name": "[ModelStudio Token Plan] glm-5.1",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 202752
+        }
+      },
+      {
+        "id": "glm-5",
+        "name": "[ModelStudio Token Plan] glm-5",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "contextWindowSize": 202752
+        }
+      },
+      {
+        "id": "MiniMax-M2.5",
+        "name": "[ModelStudio Token Plan] MiniMax-M2.5",
+        "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+        "envKey": "BAILIAN_TOKEN_PLAN_API_KEY",
+        "generationConfig": {
+          "contextWindowSize": 196608
+        }
       }
     ],
     "gemini": [
       {
+        "id": "gemini-3.1-pro-preview",
+        "name": "gemini-3.1-pro-preview",
+        "baseUrl": "https://generativelanguage.googleapis.com",
+        "envKey": "QWEN_CUSTOM_API_KEY_GEMINI_HTTPS_GENERATIVELANGUAGE_GOOGLEAPIS_COM_2204C1361727",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "modalities": { "image": true, "video": true }
+        }
+      },
+      {
+        "id": "gemini-3-flash-preview",
+        "name": "gemini-3-flash-preview",
+        "baseUrl": "https://generativelanguage.googleapis.com",
+        "envKey": "QWEN_CUSTOM_API_KEY_GEMINI_HTTPS_GENERATIVELANGUAGE_GOOGLEAPIS_COM_2204C1361727",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "modalities": { "image": true, "video": true }
+        }
+      },
+      {
         "id": "gemini-3.5-flash",
         "name": "gemini-3.5-flash",
         "baseUrl": "https://generativelanguage.googleapis.com",
-        "envKey": "GEMINI_API_KEY",
+        "envKey": "QWEN_CUSTOM_API_KEY_GEMINI_HTTPS_GENERATIVELANGUAGE_GOOGLEAPIS_COM_2204C1361727",
+        "generationConfig": {
+          "extra_body": { "enable_thinking": true },
+          "modalities": { "image": true, "video": true }
+        }
+      },
+      {
+        "id": "gemini-3.5-flash-lite",
+        "name": "gemini-3.5-flash-lite",
+        "baseUrl": "https://generativelanguage.googleapis.com",
+        "envKey": "QWEN_CUSTOM_API_KEY_GEMINI_HTTPS_GENERATIVELANGUAGE_GOOGLEAPIS_COM_2204C1361727",
         "generationConfig": {
           "extra_body": { "enable_thinking": true },
           "modalities": { "image": true, "video": true }
@@ -93,7 +340,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/session-bootstrap.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/session-bootstrap.js",
             "name": "session-bootstrap",
             "timeout": 10000
           }
@@ -105,21 +352,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/prompt-router.js",
-            "name": "prompt-router",
-            "timeout": 15000
+            "command": "node C:/Users/vansy/.qwen/hooks/context-pruner.js",
+            "name": "context-pruner",
+            "timeout": 5000
           }
         ]
-      }
-    ],
-    "SubagentStart": [
+      },
       {
         "hooks": [
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/subagent-presenter.js",
-            "name": "subagent-presenter",
-            "timeout": 5000
+            "command": "node C:/Users/vansy/.qwen/hooks/prompt-router.js",
+            "name": "prompt-router",
+            "timeout": 15000
           }
         ]
       }
@@ -130,13 +375,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/security-check.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/security-check.js",
             "name": "security-check",
             "timeout": 5000
           },
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/trading-risk-guard.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/trading-risk-guard.js",
             "name": "trading-risk-guard",
             "timeout": 5000
           }
@@ -145,17 +390,28 @@
     ],
     "PostToolUse": [
       {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node C:/Users/vansy/.qwen/hooks/token-monitor.js",
+            "name": "token-monitor",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
         "matcher": "write_file",
         "hooks": [
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/lint-check.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/lint-check.js",
             "name": "lint-check",
             "timeout": 5000
           },
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/auto-format.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/auto-format.js",
             "name": "auto-format",
             "timeout": 5000
           }
@@ -167,7 +423,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/parent-silencer.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/parent-silencer.js",
             "name": "parent-silencer",
             "timeout": 5000
           }
@@ -177,8 +433,20 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/output-sanitizer.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/output-sanitizer.js",
             "name": "output-sanitizer",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node C:/Users/vansy/.qwen/hooks/subagent-presenter.js",
+            "name": "subagent-presenter",
             "timeout": 5000
           }
         ]
@@ -189,26 +457,41 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/quality-gate.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/hallucination-guard.js",
+            "name": "hallucination-guard",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node C:/Users/vansy/.qwen/hooks/quality-gate.js",
             "name": "quality-gate",
             "timeout": 10000
           },
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/auto-memory.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/auto-memory.js",
             "name": "auto-memory",
             "timeout": 10000
           },
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/improvement-tracker.js",
+            "command": "node C:/Users/vansy/.qwen/hooks/improvement-tracker.js",
             "name": "improvement-tracker",
             "timeout": 10000
           },
           {
             "type": "command",
-            "command": "node __QWEN_HOME__/hooks/protocol-updater.js",
-            "name": "protocol-updater",
+            "command": "node C:/Users/vansy/.qwen/hooks/protocol-updater.js",
+            "name": "protocol-updater"
+          },
+          {
+            "type": "command",
+            "command": "node C:/Users/vansy/.qwen/hooks/reflection.js",
+            "name": "reflection",
             "timeout": 10000
           }
         ]
@@ -219,7 +502,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python __QWEN_HOME__/core/memory-distiller.py",
+            "command": "python C:/Users/vansy/.qwen/core/memory-distiller.py",
             "name": "memory-distiller",
             "timeout": 15000
           }
@@ -231,35 +514,94 @@
     "tavily": {
       "command": "npx",
       "args": ["-y", "tavily-mcp@latest"],
-      "description": "Real-time web search optimized for AI"
+      "description": "Real-time web search and news optimized for AI"
     },
     "exa": {
       "command": "npx",
       "args": ["-y", "exa-mcp-server@latest"],
-      "description": "Semantic search for code and research"
+      "description": "Semantic search for code, academic research, and deep content"
     },
     "brave-search": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-brave-search"],
-      "description": "Privacy-focused web search (2000 free queries/month)"
+      "description": "Privacy-focused web search (2,000 free queries/month)"
     },
     "web-research": {
       "command": "npx",
       "args": ["-y", "@mzxrai/mcp-webresearch@latest"],
-      "description": "Automated deep web research"
+      "description": "Automated web research via headless browser"
     },
-    "fetch": {
+    "github": {
       "command": "npx",
-      "args": ["-y", "@kazuph/mcp-fetch"],
-      "description": "Raw URL content retrieval"
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "description": "GitHub operations - repo management, PRs, issues, Actions"
     },
     "filesystem": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-filesystem", "./"],
-      "description": "Local filesystem access"
+      "description": "Secure local file read/write access"
+    },
+    "fetch": {
+      "command": "npx",
+      "args": ["-y", "@kazuph/mcp-fetch"],
+      "description": "Raw URL content retrieval + Jina AI proxy"
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "description": "Local knowledge graph for persistent long-term AI memory"
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "description": "Complex problem decomposition and chain-of-thought reasoning"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp", "--browser", "chrome"],
+      "description": "Browser automation and E2E testing via headless Chrome"
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "description": "Live documentation lookup for frontend/backend libraries"
+    },
+    "magic": {
+      "command": "npx",
+      "args": ["-y", "@magicuidesign/mcp@latest"],
+      "description": "Magic UI components for premium frontend animations"
+    },
+    "vercel": {
+      "type": "http",
+      "url": "https://mcp.vercel.com",
+      "description": "Cloud deployment and project management for web apps"
+    },
+    "firecrawl": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": { "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}" },
+      "description": "Advanced web scraping and crawling"
+    },
+    "Parallel Search MCP": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://search.parallel.ai/mcp"]
     }
   },
   "security": {
-    "auth": { "selectedType": "gemini" }
+    "auth": { "selectedType": "openai" }
+  },
+  "providerMetadata": {
+    "token-plan": {
+      "version": "7e09128431797dac21fcef938a2478b51b7801c2a90e71bdd5ace7f0a12a5e12",
+      "baseUrl": "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1"
+    },
+    "alibabaStandard": {
+      "version": "c99fc95982d71cae4c36eabd0868c9c1794d716ce9babc9d03423be2113bd4ed",
+      "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+    },
+    "idealab": {
+      "version": "61f3bef1decd8aa6a17508fb8e7acde4eec8eb154b9b14398d3eb075823339f3",
+      "baseUrl": "https://idealab.alibaba-inc.com/api/openai/v1"
+    }
   }
 }
