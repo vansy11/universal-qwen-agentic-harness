@@ -5,7 +5,7 @@ process.stdin.on('end', () => {
         const payload = JSON.parse(input);
         const text = JSON.stringify(payload);
 
-        // === 1. AI SLOP CHECK ===
+        // 1. AI SLOP CHECK
         const slopPhrases = [
             'Here is', "Here's", 'Certainly!', "I'd be happy to",
             'I would be happy to', 'In conclusion', 'To summarize',
@@ -15,10 +15,10 @@ process.stdin.on('end', () => {
             'Let me explain', 'Allow me to', 'Based on my analysis'
         ];
 
-        // === 2. EMOJI/SYMBOL CHECK ===
+        // 2. EMOJI/SYMBOL CHECK
         const emojiPattern = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}🔧🚫🛠️◆︎∴︎➜▄▀█╔╗╚╝║═┌┐└┘│─├┤┬┴┼]/gu;
 
-        // === 3. HALLUCINATION RISK CHECK ===
+        // 3. HALLUCINATION RISK CHECK
         const hallucinationSignals = [
             { pattern: /\baccording to (a |the )?(study|research|report|source)\b/i, reason: 'Vague citation' },
             { pattern: /\bstudies show\b/i, reason: 'Generic "studies show"' },
@@ -41,7 +41,7 @@ process.stdin.on('end', () => {
             if (sig.pattern.test(text)) issues.push('Hallucination risk: ' + sig.reason);
         }
 
-        // === 4. RAW MCP OUTPUT CHECK ===
+        // 4. RAW MCP OUTPUT CHECK
         const rawMcpPatterns = [
             { pattern: /"search_results":\s*\[/i, reason: 'Raw Tavily/Exa JSON' },
             { pattern: /"Detailed Results":/i, reason: 'Raw MCP dump' },
@@ -54,7 +54,7 @@ process.stdin.on('end', () => {
             if (sig.pattern.test(text)) issues.push('Messy output: ' + sig.reason);
         }
 
-        // === 5. RAW TOOL CALL JSON DUMP CHECK (FIXED PLACEMENT) ===
+        // 5. RAW TOOL CALL JSON DUMP CHECK
         const rawToolCallPatterns = [
             { pattern: /"name":\s*"agent",\s*"arguments":\s*{/i, reason: 'Raw Task tool JSON dumped' },
             { pattern: /"subagent_type":\s*"/i, reason: 'Raw subagent JSON dumped' },
@@ -65,7 +65,7 @@ process.stdin.on('end', () => {
             if (sig.pattern.test(text)) issues.push('Messy output: ' + sig.reason);
         }
 
-        // === DECISION MAKING ===
+        // DECISION MAKING
         if (issues.length > 0) {
             console.log(JSON.stringify({
                 decision: "block",

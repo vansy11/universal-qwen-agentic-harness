@@ -100,7 +100,7 @@ process.stdin.on('end', () => {
                 ctx += '2. DO NOT call any other tools (No web_search, No brave_web_search, No read_file).\n';
                 ctx += '3. DO NOT attempt to do the task yourself.\n';
                 ctx += '4. WAIT for the sub-agent to return its result.\n';
-                ctx += '5. When the subagent finishes, output EXACTLY its response verbatim. DO NOT add introductions or summaries.\n\n';
+                ctx += '5. When the subagent finishes, output EXACTLY its response verbatim. DO NOT add introductions, conclusions, or summaries.\n\n';
             } else {
                 // ACTIVE INJECTION
                 ctx += '## ACTIVE CONTEXT INJECTION\n';
@@ -123,7 +123,7 @@ process.stdin.on('end', () => {
             }
         }
 
-        // === MEMORY LOADING ===
+        // MEMORY LOADING
         try {
           const memDir = QWEN_HOME + '/memories';
           function readMemFiles(dir, prefix) {
@@ -160,7 +160,7 @@ process.stdin.on('end', () => {
           }
         } catch(e) {}
 
-        // === SYSTEM RULES ===
+        // SYSTEM RULES
         ctx += '## RULES (ZERO TOLERANCE)\n';
         ctx += '1. NO FILLER/EMOJI: Start immediately with substance. No "Here is", "Certainly".\n';
         ctx += '2. SINGLE OUTPUT: Output only 1 final response. No duplicates.\n';

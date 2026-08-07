@@ -25,9 +25,9 @@
 
 <div align="center">
 
-| [Quickstart](#quickstart)             | [Architecture](#architecture-flow)           | [Components](#core-components)         | [Commands](#slash-commands)     |
-| ------------------------------------- | -------------------------------------------- | -------------------------------------- | ------------------------------- |
-| Get up and running in under 2 minutes | How the Orchestrator-Worker system functions | 30 agents, 40 skills, 9 hooks, 15 MCPs | Force specific agent delegation |
+| [Quickstart](#quickstart)             | [Architecture](#architecture-flow)           | [Components](#core-components)          | [Commands](#slash-commands)     |
+| ------------------------------------- | -------------------------------------------- | --------------------------------------- | ------------------------------- |
+| Get up and running in under 2 minutes | How the Orchestrator-Worker system functions | 30 agents, 41 skills, 17 hooks, 15 MCPs | Force specific agent delegation |
 
 </div>
 
@@ -47,13 +47,14 @@ Instead of rebuilding this process in every prompt, you install it once and make
 
 This harness is MIT-licensed open source. It works natively with the Qwen Code CLI, using an Orchestrator-Worker architecture driven by universal Node.js hooks.
 
-| Included    | Count | What it gives you                                                                  |
-| ----------- | ----: | ---------------------------------------------------------------------------------- |
-| Agents      |    30 | Management, programming, infrastructure, research, finance, and specialized work   |
-| Skills      |    40 | AI core, programming, security, DevOps, research, and finance workflows            |
-| Commands    |    13 | Slash commands for instant agent delegation                                        |
-| Hooks       |     9 | Prompt routing, command safety checks, quality enforcement, and memory persistence |
-| MCP servers |    15 | Web search, code research, GitHub, filesystem, browser automation, and more        |
+| Included    | Count | What it gives you                                                                         |
+| ----------- | ----: | ----------------------------------------------------------------------------------------- |
+| Agents      |    30 | Management, programming, infrastructure, research, finance, and specialized work          |
+| Skills      |    41 | AI core, programming, security, DevOps, research, finance, and system workflows           |
+| Commands    |    15 | Slash commands for instant agent delegation                                               |
+| Hooks       |    17 | Context pruning, prompt routing, security checks, quality enforcement, memory persistence |
+| Rules       |    13 | Coding standards, output contracts, security baselines, execution protocols               |
+| MCP servers |    15 | Web search, code research, GitHub, filesystem, browser automation, and more               |
 
 ---
 
@@ -100,7 +101,7 @@ If either command comes back empty, double check that `.qwen/settings.json` exis
 <details>
 <summary><strong>Multi-provider support</strong></summary>
 
-You can switch between DashScope (Alibaba), OpenAI, Moonshot, and OpenRouter directly inside `settings.json`.
+You can switch between DashScope (Alibaba), OpenAI, Moonshot, Google Gemini, and OpenRouter directly inside `settings.json`. Supports both standard and Token Plan models.
 
 ```json
 {
@@ -125,25 +126,42 @@ Add additional provider blocks the same way, then point your active profile at t
 
 The hooks are written in pure Node.js (`.js`) rather than PowerShell (`.ps1`) to ensure full cross-platform compatibility (Windows, macOS, Linux) without execution policy issues.
 
-| Hook                    | Type             | Purpose                                                        |
-| ----------------------- | ---------------- | -------------------------------------------------------------- |
-| `prompt-router.js`      | UserPromptSubmit | Analyzes prompt complexity and routes tasks to the right agent |
-| `security-check.js`     | PreToolUse       | Blocks dangerous shell commands (for example, `rm -rf`)        |
-| `trading-risk-guard.js` | PreToolUse       | Guards trading operations against unauthorized execution       |
-| `quality-gate.js`       | Stop             | Rejects robotic phrasing and forces human-like rewrites        |
-| `auto-memory.js`        | Stop             | Persists learnings and patterns to long-term memory            |
+| Hook                     | Type             | Purpose                                                        |
+| ------------------------ | ---------------- | -------------------------------------------------------------- |
+| `session-bootstrap.js`   | SessionStart     | Initialize session context and environment                     |
+| `context-pruner.js`      | UserPromptSubmit | Prune context before prompt processing                         |
+| `prompt-router.js`       | UserPromptSubmit | Analyzes prompt complexity and routes tasks to the right agent |
+| `security-check.js`      | PreToolUse       | Blocks dangerous shell commands (for example, `rm -rf`)        |
+| `trading-risk-guard.js`  | PreToolUse       | Guards trading operations against unauthorized execution       |
+| `token-monitor.js`       | PostToolUse      | Track token consumption per turn                               |
+| `lint-check.js`          | PostToolUse      | Auto-lint code after file writes                               |
+| `auto-format.js`         | PostToolUse      | Auto-format code to project standards                          |
+| `parent-silencer.js`     | MessageDisplay   | Silence parent conversation noise                              |
+| `output-sanitizer.js`    | MessageDisplay   | Clean raw tool outputs from displayed messages                 |
+| `subagent-presenter.js`  | SubagentStart    | Format subagent results for clean presentation                 |
+| `hallucination-guard.js` | Stop             | Detect and flag potential hallucinations                       |
+| `quality-gate.js`        | Stop             | Rejects robotic phrasing and forces human-like rewrites        |
+| `auto-memory.js`         | Stop             | Persists learnings and patterns to long-term memory            |
+| `improvement-tracker.js` | Stop             | Track and log system improvements                              |
+| `protocol-updater.js`    | Stop             | Update protocol documentation based on changes                 |
+| `reflection.js`          | Stop             | Self-reflect on session outcomes                               |
 
 </details>
 
 <details>
 <summary><strong>Environment variables reference</strong></summary>
 
-| Variable            | Purpose                                                            |
-| ------------------- | ------------------------------------------------------------------ |
-| `DASHSCOPE_API_KEY` | Authenticates DashScope / Alibaba Cloud model calls                |
-| `TAVILY_API_KEY`    | Enables the `tavily` web search MCP server                         |
-| `GITHUB_TOKEN`      | Enables the `github` MCP server for repo, PR, and issue management |
-| `EXA_API_KEY`       | Enables the `exa` semantic search MCP server                       |
+| Variable                     | Purpose                                                            |
+| ---------------------------- | ------------------------------------------------------------------ |
+| `DASHSCOPE_API_KEY`          | Authenticates DashScope / Alibaba Cloud model calls                |
+| `TAVILY_API_KEY`             | Enables the `tavily` web search MCP server                         |
+| `GITHUB_TOKEN`               | Enables the `github` MCP server for repo, PR, and issue management |
+| `EXA_API_KEY`                | Enables the `exa` semantic search MCP server                       |
+| `BRAVE_API_KEY`              | Enables the `brave-search` MCP server                              |
+| `FIRECRAWL_API_KEY`          | Enables the `firecrawl` MCP server                                 |
+| `SHODAN_API_KEY`             | Enables Shodan vulnerability scanning                              |
+| `GEMINI_API_KEY`             | Authenticates Google Gemini model calls                            |
+| `BAILIAN_TOKEN_PLAN_API_KEY` | Enables Token Plan discounted model access                         |
 
 Store these in `.qwen/settings.json` under the `env` block, or export them as system environment variables. Never commit real values to version control.
 </details>
@@ -156,18 +174,18 @@ This system uses an Orchestrator-Worker architecture. Below is the flow of how a
 
 ```text
 User Prompt
-    -> prompt-router.js (hook)
-        -> Light prompt  -> Direct AI response
-        -> Heavy prompt  -> fullstack-orchestrator
-                                -> context-builder
-                                    -> database-architect
-                                    -> backend-engineer
-                                    -> frontend-engineer
-                                    -> mobile-developer
-                                    -> cloud-architect
-                                -> quality-gate.js (hook)
-                                    -> AI slop detected -> humanizer-agent -> quality-gate.js (recheck)
-                                    -> Clean output     -> Final output to user
+    → context-pruner.js + prompt-router.js (hooks)
+        → Light prompt  → Direct AI response
+        → Heavy prompt  → fullstack-orchestrator
+                                → context-builder
+                                    → database-architect
+                                    → backend-engineer
+                                    → frontend-engineer
+                                    → mobile-developer
+                                    → cloud-architect
+                                → Stop hooks (quality-gate, auto-memory, reflection...)
+                                    → AI slop detected → humanizer-agent → recheck
+                                    → Clean output     → Final output to user
 ```
 
 <details>
@@ -175,7 +193,7 @@ User Prompt
 
 ```mermaid
 graph TD
-    A[User Prompt] --> B{prompt-router.js Hook}
+    A[User Prompt] --> B{context-pruner.js + prompt-router.js}
     B -->|Light Prompt| C[Direct AI Response]
     B -->|Heavy Prompt| D[fullstack-orchestrator]
     D --> E[context-builder]
@@ -183,7 +201,7 @@ graph TD
     E --> G[backend-engineer]
     E --> H[frontend-engineer]
     E --> I[mobile-developer]
-    F & G & H & I --> J{quality-gate.js Hook}
+    F & G & H & I --> J{Quality Gate}
     J -->|AI Slop Detected| K[humanizer-agent]
     K --> J
     J -->|Clean Output| L[Final Output to User]
@@ -212,7 +230,7 @@ graph TD
 </details>
 
 <details>
-<summary><strong>40 technical skills</strong></summary>
+<summary><strong>41 technical skills</strong></summary>
 
 | Category    | Skills                                                                                                                                                                                                                                             |
 | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -223,18 +241,20 @@ graph TD
 | Data        | `data-visualization`, `etl-pipeline`                                                                                                                                                                                                               |
 | Research    | `web-research-deep`, `news-trending-aggregator`, `api-integration-exa-tavily`, `social-media-monitor`                                                                                                                                              |
 | Finance     | `finance-analysis`, `quant-algo-trading`                                                                                                                                                                                                           |
-| System      | `fullstack-orchestration`, `workflow-automation`, `universal-execution-loop`, `error-resolution-loop`, `accessibility-audit`, `seo-optimization`, `technical-documentation`, `cloud-infrastructure`                                                |
+| System      | `fullstack-orchestration`, `workflow-automation`, `universal-execution-loop`, `error-resolution-loop`, `accessibility-audit`, `seo-optimization`, `technical-documentation`, `cloud-infrastructure`, `strategic-compact`                           |
 
 </details>
 
 <details>
-<summary><strong>13 slash commands</strong></summary>
+<summary><strong>15 slash commands</strong></summary>
 
 | Command       | Description                                                                  |
 | ------------- | ---------------------------------------------------------------------------- |
+| `/audit`      | Audit usage of agents, models, MCP servers, and skills harness               |
 | `/backtest`   | Run backtest suite for a trading strategy with walk-forward validation       |
 | `/deploy`     | Deploy application to production or staging environment                      |
 | `/erd`        | Generate Entity Relationship Diagram from database schema or requirements    |
+| `/eval`       | Run routing regression evals to measure harness precision                    |
 | `/fullstack`  | Build complete full-stack feature from requirements to deployment            |
 | `/git-push`   | Stage, commit, and push changes with conventional commit message             |
 | `/humanize`   | Rewrite AI-generated text to sound natural and human                         |
@@ -249,17 +269,26 @@ graph TD
 </details>
 
 <details>
-<summary><strong>9 universal Node.js hooks</strong></summary>
+<summary><strong>17 universal hooks</strong></summary>
 
 - `session-bootstrap.js`: Session initialization and context setup
+- `context-pruner.js`: Prunes conversation context before prompt processing
 - `prompt-router.js`: Analyzes prompt complexity and maps tasks to target agents
-- `security-check.js`: PreToolUse hook that blocks dangerous shell commands (for example, `rm -rf`, `git push --force`)
+- `security-check.js`: PreToolUse hook that blocks dangerous shell commands (`rm -rf`, `git push --force`, etc.)
 - `trading-risk-guard.js`: PreToolUse hook for trading operation validation
+- `token-monitor.js`: Tracks token consumption across tool use
 - `lint-check.js`: PostToolUse hook for auto-linting code after writes
 - `auto-format.js`: PostToolUse hook for auto-formatting code to standards
-- `quality-gate.js`: Stop hook that rejects robotic phrasing and forces human-like rewrites
-- `auto-memory.js`: Stop hook that persists learnings to long-term memory
-- `memory-distiller.py`: PreCompact hook that distills context into compact memory
+- `parent-silencer.js`: Filters parent conversation noise during message display
+- `output-sanitizer.js`: Cleans raw tool outputs from user-facing messages
+- `subagent-presenter.js`: Formats subagent results for clean presentation
+- `hallucination-guard.js`: Flags potential hallucinations in responses
+- `quality-gate.js`: Rejects robotic phrasing and forces human-like rewrites
+- `auto-memory.js`: Persists learnings to long-term memory
+- `improvement-tracker.js`: Logs systemic improvements over time
+- `protocol-updater.js`: Syncs protocol docs with recent changes
+- `reflection.js`: Self-evaluates session outcomes
+- `memory-distiller.py`: Distills context into compact memory before compaction
 
 </details>
 
@@ -294,9 +323,11 @@ Force specific agent delegation instantly using the built-in commands.
 
 | Command       | Description                                                    |
 | ------------- | -------------------------------------------------------------- |
+| `/audit`      | Audit usage of agents, models, MCP servers, and skills         |
 | `/backtest`   | Run backtest suite for trading strategy validation             |
 | `/deploy`     | Generate Dockerfile + docker-compose with health checks        |
 | `/erd`        | Generate Entity-Relationship Diagram for current database      |
+| `/eval`       | Run routing regression evals to measure harness precision      |
 | `/fullstack`  | Run the full-stack chain (database, backend, frontend, mobile) |
 | `/git-push`   | Safely commit and push the project to GitHub                   |
 | `/humanize`   | Clean up the AI's last response to sound more human            |
@@ -320,6 +351,9 @@ Force specific agent delegation instantly using the built-in commands.
 | Dangerous shell commands can slip through         | `security-check.js` blocks risky commands before execution    |
 | Switching model providers means rewriting prompts | Provider swaps happen in `settings.json`, not in your prompts |
 | No persistent memory across sessions              | `auto-memory.js` persists learnings automatically             |
+| No visibility into token usage                    | `token-monitor.js` tracks consumption per turn                |
+| Hallucinations go unchecked                       | `hallucination-guard.js` flags unverified claims              |
+| Documentation drifts out of sync                  | `protocol-updater.js` keeps docs aligned with changes         |
 
 ---
 
@@ -354,9 +388,10 @@ Check that `prompt-router.js` is registered as a UserPromptSubmit hook. Heavy pr
 ## Features
 
 - **30 specialized agents** spanning management, programming, infrastructure, research, finance, and security
-- **40 technical skills** for rapid development across AI, security, DevOps, and full-stack workflows
-- **13 slash commands** for instant agent delegation
-- **9 universal hooks** for automatic prompt routing, security enforcement, quality gating, and memory persistence
+- **41 technical skills** for rapid development across AI, security, DevOps, and full-stack workflows
+- **15 slash commands** for instant agent delegation
+- **17 universal hooks** for automatic context pruning, prompt routing, security enforcement, quality gating, and memory persistence
+- **13 rule sets** covering coding standards, output contracts, security baselines, and execution protocols
 - **15 MCP integrations** covering web search, GitHub, filesystem, memory, browser automation, and more
 
 ## Installation

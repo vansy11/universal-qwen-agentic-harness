@@ -29,7 +29,7 @@ Universal Qwen Agentic Harness — Orchestrator-Worker architecture driven by na
 
 ---
 
-### 2. Skills (40)
+### 2. Skills (41)
 
 | Category        | Skills                                                                                                                                                                                                                                             |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -40,17 +40,19 @@ Universal Qwen Agentic Harness — Orchestrator-Worker architecture driven by na
 | **Data**        | `data-visualization`, `etl-pipeline`                                                                                                                                                                                                               |
 | **Research**    | `web-research-deep`, `news-trending-aggregator`, `api-integration-exa-tavily`, `social-media-monitor`                                                                                                                                              |
 | **Finance**     | `finance-analysis`, `quant-algo-trading`                                                                                                                                                                                                           |
-| **System**      | `fullstack-orchestration`, `workflow-automation`, `universal-execution-loop`, `error-resolution-loop`, `accessibility-audit`, `seo-optimization`, `technical-documentation`, `cloud-infrastructure`                                                |
+| **System**      | `fullstack-orchestration`, `workflow-automation`, `universal-execution-loop`, `error-resolution-loop`, `accessibility-audit`, `seo-optimization`, `technical-documentation`, `cloud-infrastructure`, `strategic-compact`                           |
 
 ---
 
-### 3. Commands (13)
+### 3. Commands (15)
 
 | Command       | Description                                                                  |
 | ------------- | ---------------------------------------------------------------------------- |
+| `/audit`      | Audit usage of agents, models, MCP servers, and skills harness               |
 | `/backtest`   | Run backtest suite for a trading strategy with walk-forward validation       |
 | `/deploy`     | Deploy application to production or staging environment                      |
 | `/erd`        | Generate Entity Relationship Diagram from database schema or requirements    |
+| `/eval`       | Run routing regression evals to measure harness precision                    |
 | `/fullstack`  | Build complete full-stack feature from requirements to deployment            |
 | `/git-push`   | Stage, commit, and push changes with conventional commit message             |
 | `/humanize`   | Rewrite AI-generated text to sound natural and human                         |
@@ -64,32 +66,41 @@ Universal Qwen Agentic Harness — Orchestrator-Worker architecture driven by na
 
 ---
 
-### 4. Hooks (9 Node.js Scripts)
+### 4. Hooks (17 Node.js & Python Scripts)
 
-| Hook                    | Event                            | Purpose                                                             |
-| ----------------------- | -------------------------------- | ------------------------------------------------------------------- |
-| `session-bootstrap.js`  | `SessionStart`                   | Initialize session context and environment                          |
-| `prompt-router.js`      | `UserPromptSubmit`               | Analyze prompt complexity and route to optimal agent                |
-| `security-check.js`     | `PreToolUse` (run_shell_command) | Block dangerous shell commands (e.g., `rm -rf`, `git push --force`) |
-| `trading-risk-guard.js` | `PreToolUse` (run_shell_command) | Guard for trading operations — prevents unauthorized trades         |
-| `lint-check.js`         | `PostToolUse` (write_file)       | Auto-lint code after file writes                                    |
-| `auto-format.js`        | `PostToolUse` (write_file)       | Auto-format code to project standards                               |
-| `quality-gate.js`       | `Stop`                           | Final quality check before output delivery                          |
-| `auto-memory.js`        | `Stop`                           | Auto-save learnings and patterns to memory                          |
-| `memory-distiller.py`   | `PreCompact`                     | Distill conversation context into compact memory                    |
+| Hook                     | Event                            | Purpose                                                             |
+| ------------------------ | -------------------------------- | ------------------------------------------------------------------- |
+| `session-bootstrap.js`   | `SessionStart`                   | Initialize session context and environment                          |
+| `context-pruner.js`      | `UserPromptSubmit`               | Prune context before prompt processing                              |
+| `prompt-router.js`       | `UserPromptSubmit`               | Analyze prompt complexity and route to optimal agent                |
+| `security-check.js`      | `PreToolUse` (run_shell_command) | Block dangerous shell commands (e.g., `rm -rf`, `git push --force`) |
+| `trading-risk-guard.js`  | `PreToolUse` (run_shell_command) | Guard for trading operations — prevents unauthorized trades         |
+| `token-monitor.js`       | `PostToolUse` (*)                | Track token consumption per turn                                    |
+| `lint-check.js`          | `PostToolUse` (write_file)       | Auto-lint code after file writes                                    |
+| `auto-format.js`         | `PostToolUse` (write_file)       | Auto-format code to project standards                               |
+| `parent-silencer.js`     | `MessageDisplay`                 | Silence parent conversation noise                                   |
+| `output-sanitizer.js`    | `MessageDisplay`                 | Clean raw tool outputs from displayed messages                      |
+| `subagent-presenter.js`  | `SubagentStart`                  | Format subagent results for clean presentation                      |
+| `hallucination-guard.js` | `Stop`                           | Detect and flag potential hallucinations                            |
+| `quality-gate.js`        | `Stop`                           | Final quality check before output delivery                          |
+| `auto-memory.js`         | `Stop`                           | Auto-save learnings and patterns to memory                          |
+| `improvement-tracker.js` | `Stop`                           | Track and log system improvements                                   |
+| `protocol-updater.js`    | `Stop`                           | Update protocol documentation based on changes                      |
+| `reflection.js`          | `Stop`                           | Self-reflect on session outcomes                                    |
+| `memory-distiller.py`    | `PreCompact`                     | Distill conversation context into compact memory                    |
 
 ---
 
-### 5. Rules (9)
+### 5. Rules (13)
 
-| Category       | Rules                                                                                   |
-| -------------- | --------------------------------------------------------------------------------------- |
-| **Universal**  | `chain-of-thought.md`, `output-format.md`, `security-baseline.md`, `self-correction.md` |
-| **Common**     | `coding-style.md`                                                                       |
-| **Execution**  | `delivery-rules.md`                                                                     |
-| **Python**     | `coding-style.md`                                                                       |
-| **SQL**        | `query-safety.md`                                                                       |
-| **TypeScript** | `coding-style.md`                                                                       |
+| Category       | Rules                                                                                                                                                                                  |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Universal**  | `chain-of-thought.md`, `file-write-protocol.md`, `output-contract.md`, `output-format.md`, `power-protocol.md`, `security-baseline.md`, `self-correction.md`, `web-search-priority.md` |
+| **Common**     | `coding-style.md`                                                                                                                                                                      |
+| **Execution**  | `delivery-rules.md`                                                                                                                                                                    |
+| **Python**     | `coding-style.md`                                                                                                                                                                      |
+| **SQL**        | `query-safety.md`                                                                                                                                                                      |
+| **TypeScript** | `coding-style.md`                                                                                                                                                                      |
 
 ---
 
@@ -120,9 +131,9 @@ Universal Qwen Agentic Harness — Orchestrator-Worker architecture driven by na
 | Component       | Count   |
 | --------------- | ------- |
 | **Agents**      | 30      |
-| **Skills**      | 40      |
-| **Commands**    | 13      |
-| **Hooks**       | 9       |
-| **Rules**       | 9       |
+| **Skills**      | 41      |
+| **Commands**    | 15      |
+| **Hooks**       | 17      |
+| **Rules**       | 13      |
 | **MCP Servers** | 15      |
-| **Total**       | **116** |
+| **Total**       | **131** |

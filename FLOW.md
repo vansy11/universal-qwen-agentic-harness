@@ -50,7 +50,7 @@ graph TD
 
 ### 1. Input & Routing (UserPromptSubmit)
 
-**prompt-router.js** intercepts before main AI processes:
+**context-pruner.js** + **prompt-router.js** intercept before main AI processes:
 
 - **Light Prompts** (e.g., "What is Python?"): Direct AI answer, saving tokens.
 - **Heavy Prompts** (e.g., "Build a website with database"): Injects `AdditionalContext` for Orchestrator mode.
@@ -91,29 +91,42 @@ Specialist agents execute:
 - Explicit user confirmation
 - Circuit breaker conditions
 
-### 5. Quality Gate & Humanizer (Stop)
+### 5. Quality Gate, Humanizer & Memory (Stop)
 
-**quality-gate.js** on `Stop` event:
+**quality-gate.js**, **hallucination-guard.js**, **reflection.js**, **improvement-tracker.js**, **protocol-updater.js**, **auto-memory.js** on `Stop` event:
 
 - Detects "AI Slop" (_"Here is your code..."_, _"Certainly!"_)
 - **Slop detected:** Block → **humanizer** agent rewrites
 - **Clean:** **auto-memory.js** saves learnings → Final output
+- **Hallucination guard:** Flags unverified claims
+- **Reflection:** Self-evaluates session outcomes
+- **Improvement tracker:** Logs systemic improvements
+- **Protocol updater:** Syncs protocol docs with changes
 
 ---
 
 ## Hook Execution Order
 
-| Phase                            | Hook                    | Type    | Timeout |
-| -------------------------------- | ----------------------- | ------- | ------- |
-| `SessionStart`                   | `session-bootstrap.js`  | command | 10s     |
-| `UserPromptSubmit`               | `prompt-router.js`      | command | 15s     |
-| `PreToolUse` (run_shell_command) | `security-check.js`     | command | 5s      |
-| `PreToolUse` (run_shell_command) | `trading-risk-guard.js` | command | 5s      |
-| `PostToolUse` (write_file)       | `lint-check.js`         | command | 5s      |
-| `PostToolUse` (write_file)       | `auto-format.js`        | command | 5s      |
-| `Stop`                           | `quality-gate.js`       | command | 10s     |
-| `Stop`                           | `auto-memory.js`        | command | 10s     |
-| `PreCompact`                     | `memory-distiller.py`   | command | 15s     |
+| Phase                            | Hook                     | Type    | Timeout |
+| -------------------------------- | ------------------------ | ------- | ------- |
+| `SessionStart`                   | `session-bootstrap.js`   | command | 10s     |
+| `UserPromptSubmit`               | `context-pruner.js`      | command | 5s      |
+| `UserPromptSubmit`               | `prompt-router.js`       | command | 15s     |
+| `PreToolUse` (run_shell_command) | `security-check.js`      | command | 5s      |
+| `PreToolUse` (run_shell_command) | `trading-risk-guard.js`  | command | 5s      |
+| `PostToolUse` (*)                | `token-monitor.js`       | command | 5s      |
+| `PostToolUse` (write_file)       | `lint-check.js`          | command | 5s      |
+| `PostToolUse` (write_file)       | `auto-format.js`         | command | 5s      |
+| `MessageDisplay`                 | `parent-silencer.js`     | command | 5s      |
+| `MessageDisplay`                 | `output-sanitizer.js`    | command | 5s      |
+| `SubagentStart`                  | `subagent-presenter.js`  | command | 5s      |
+| `Stop`                           | `hallucination-guard.js` | command | 5s      |
+| `Stop`                           | `quality-gate.js`        | command | 10s     |
+| `Stop`                           | `auto-memory.js`         | command | 10s     |
+| `Stop`                           | `improvement-tracker.js` | command | 10s     |
+| `Stop`                           | `protocol-updater.js`    | command | —       |
+| `Stop`                           | `reflection.js`          | command | 10s     |
+| `PreCompact`                     | `memory-distiller.py`    | command | 15s     |
 
 ---
 
@@ -147,7 +160,7 @@ Specialist agents execute:
 
 ```
 User Prompt
-    → prompt-router.js (classify: light/heavy)
+    → context-pruner.js → prompt-router.js (classify: light/heavy)
         → Light → Direct AI response
         → Heavy → fullstack-orchestrator
             → context-builder (scan project, gather requirements)
@@ -156,9 +169,13 @@ User Prompt
                 → Call MCPs (external data, file I/O, browser automation)
                 → PreToolUse hooks (security-check, trading-risk-guard)
                 → Execute tools
-                → PostToolUse hooks (lint-check, auto-format)
-            → Stop hooks (quality-gate, auto-memory)
+                → PostToolUse hooks (token-monitor, lint-check, auto-format)
+                → MessageDisplay hooks (parent-silencer, output-sanitizer)
+            → Stop hooks (hallucination-guard, quality-gate, auto-memory, improvement-tracker, protocol-updater, reflection)
                 → quality-gate.js: detect AI slop → humanizer agent (if needed)
+                → hallucination-guard.js: flag unverified claims
+                → reflection.js: self-evaluate outcomes
+                → improvement-tracker.js: log improvements
                 → auto-memory.js: persist learnings
             → Final output to user
 ```

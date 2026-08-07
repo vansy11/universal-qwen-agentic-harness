@@ -3,9 +3,6 @@ let input='';process.stdin.on('data',c=>input+=c);process.stdin.on('end',()=>{
   const p=JSON.parse(input);
   let text=p.message||p.content||'';
 
-  // Strip raw JSON tool call dumps
-  text=text.replace(/\{[\s\S]*?"name":\s*"(agent|tavily_search|brave_web_search|web_search)"[\s\S]*?\}/gi, '');
-  
   // 1. Strip TUI artifacts (symbols + tool calls logs)
   text=text.replace(/^[✓✗●︎◆︎►▸▶]\s+.+$/gm,'');
   text=text.replace(/✓ Agent [^\n]+\n?/gi,'');
@@ -19,6 +16,9 @@ let input='';process.stdin.on('data',c=>input+=c);process.stdin.on('end',()=>{
   text=text.replace(/●︎ Ran \d+ stop hooks[\s\S]*?(?=◆|●|$)/gi,'');
   text=text.replace(/●︎ Background agent "[^"]+" failed\.\n?/gi,'');
   text=text.replace(/Tool "[^"]+" not found[\s\S]*?(?=\n\n|✓|✗|$)/gi,'');
+  
+  text=text.replace(/●︎ No failed request to retry\.\n?/gi, '');
+  text=text.replace(/Press ctrl-s to show more lines\n?/gi, '');
   
   // 2. Strip raw MCP JSON dumps aggressively
   text=text.replace(/\{[\s\S]*?"search_results"[\s\S]*?\}/gi,'');
@@ -57,3 +57,6 @@ let input='';process.stdin.on('data',c=>input+=c);process.stdin.on('end',()=>{
   console.log(JSON.stringify({}));
  }
 });
+
+  
+  
