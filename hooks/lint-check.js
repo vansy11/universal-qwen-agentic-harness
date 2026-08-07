@@ -1,3 +1,4 @@
+const QWEN_HOME = require('path').resolve(__dirname, '..').replace(/\\/g, '/');
 let input = '';
 process.stdin.on('data', (chunk) => input += chunk);
 process.stdin.on('end', () => {

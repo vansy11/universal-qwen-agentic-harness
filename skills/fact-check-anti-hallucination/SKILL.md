@@ -5,6 +5,14 @@ metadata:
   category: ai-core
 ---
 
+## EXECUTION STANDARD (QWEN STYLE)
+Focus: Claim verification
+- APPLY: Source each claim; flag unverified
+- VERIFY: Every claim sourced or flagged
+- ANTI-PATTERNS: Unverified assertions
+<!-- /QWEN-STYLE -->
+
+
 # Anti-Hallucination & Fact-Checking Protocol
 
 As an AI, your tendency to guess unknown concepts is a critical flaw. You MUST follow these rules to prevent hallucinations:
@@ -25,3 +33,22 @@ If the user corrects your hallucination :
 1. Acknowledge the mistake immediately.
 2. Invoke the memory-curator agent to save this correction to long-term memory.
 3. Create a new SKILL.md file in .qwen/skills/ documenting this new definition so you never guess it wrong again.
+
+## FILE WRITE PROTOCOL (MANDATORY)
+Qwen Code blocks write_file if the target file was never read in the current session.
+This is a platform safety guard, not optional.
+
+BEFORE every write_file or edit_file call:
+1. ALWAYS call read_file on the target path FIRST
+2. If file doesn't exist → read fails silently → that's OK, continue to write
+3. If file exists → content loaded → now you can safely overwrite/append
+
+NEVER skip the read step. This applies to:
+- New files (read first even if doesn't exist)
+- Existing files (read to understand current state)
+- Config files, code files, documentation, reports
+
+Example correct sequence:
+read_file("target/path") ← MUST do this first
+[process/generate content]
+write_file("target/path", content) ← Now this works

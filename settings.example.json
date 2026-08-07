@@ -1,23 +1,25 @@
 ﻿{
   "$schema": "https://qwen-code.alibaba.com/schemas/settings.json",
   "ui": {
-    "autoModeAcknowledged": true
+    "autoModeAcknowledged": true,
+    "verbose": false,
+    "expandToolCalls": false,
+    "expandThinking": false
   },
   "$version": 4,
   "env": {
-    "DASHSCOPE_API_KEY": "YOUR_DASHSCOPE_API_KEY",
-    "TAVILY_API_KEY": "YOUR_TAVILY_API_KEY",
-    "EXA_API_KEY": "YOUR_EXA_API_KEY",
-    "SHODAN_API_KEY": "YOUR_SHODAN_API_KEY",
+    "DASHSCOPE_API_KEY": "YOUR_DASHSCOPE_KEY",
+    "TAVILY_API_KEY": "YOUR_TAVILY_KEY",
+    "EXA_API_KEY": "YOUR_EXA_KEY",
+    "BRAVE_API_KEY": "YOUR_BRAVE_KEY",
+    "FIRECRAWL_API_KEY": "YOUR_FIRECRAWL_KEY",
+    "GEMINI_API_KEY": "YOUR_GEMINI_KEY",
     "GITHUB_TOKEN": "YOUR_GITHUB_PAT",
-    "BRAVE_API_KEY": "YOUR_BRAVE_API_KEY",
-    "FIRECRAWL_API_KEY": "YOUR_FIRECRAWL_API_KEY",
-    "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY",
-    "BAILIAN_TOKEN_PLAN_API_KEY": "YOUR_BAILIAN_TOKEN_PLAN_KEY"
+    "BAILIAN_TOKEN_PLAN_API_KEY": "YOUR_TOKEN_PLAN_KEY"
   },
   "model": {
-    "name": "gemini-3.5-flash",
-    "baseUrl": "https://generativelanguage.googleapis.com"
+    "name": "qwen3.7-plus",
+    "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
   },
   "modelProviders": {
     "openai": [
@@ -25,12 +27,6 @@
         "id": "kimi-k2.7-code",
         "name": "kimi-k2.7-code",
         "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-        "envKey": "DASHSCOPE_API_KEY"
-      },
-      {
-        "id": "qwen3-coder-480b-a35b-instruct",
-        "name": "[ModelStudio Standard] qwen3-coder-480b-a35b-instruct",
-        "baseUrl": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
         "envKey": "DASHSCOPE_API_KEY"
       },
       {
@@ -97,7 +93,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node C:/Users/vansy/.qwen/hooks/session-bootstrap.js",
+            "command": "node __QWEN_HOME__/hooks/session-bootstrap.js",
             "name": "session-bootstrap",
             "timeout": 10000
           }
@@ -109,9 +105,21 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node C:/Users/vansy/.qwen/hooks/prompt-router.js",
+            "command": "node __QWEN_HOME__/hooks/prompt-router.js",
             "name": "prompt-router",
             "timeout": 15000
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node __QWEN_HOME__/hooks/subagent-presenter.js",
+            "name": "subagent-presenter",
+            "timeout": 5000
           }
         ]
       }
@@ -122,13 +130,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node C:/Users/vansy/.qwen/hooks/security-check.js",
+            "command": "node __QWEN_HOME__/hooks/security-check.js",
             "name": "security-check",
             "timeout": 5000
           },
           {
             "type": "command",
-            "command": "node C:/Users/vansy/.qwen/hooks/trading-risk-guard.js",
+            "command": "node __QWEN_HOME__/hooks/trading-risk-guard.js",
             "name": "trading-risk-guard",
             "timeout": 5000
           }
@@ -141,14 +149,36 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node C:/Users/vansy/.qwen/hooks/lint-check.js",
+            "command": "node __QWEN_HOME__/hooks/lint-check.js",
             "name": "lint-check",
             "timeout": 5000
           },
           {
             "type": "command",
-            "command": "node C:/Users/vansy/.qwen/hooks/auto-format.js",
+            "command": "node __QWEN_HOME__/hooks/auto-format.js",
             "name": "auto-format",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "MessageDisplay": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node __QWEN_HOME__/hooks/parent-silencer.js",
+            "name": "parent-silencer",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node __QWEN_HOME__/hooks/output-sanitizer.js",
+            "name": "output-sanitizer",
             "timeout": 5000
           }
         ]
@@ -159,14 +189,26 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node C:/Users/vansy/.qwen/hooks/quality-gate.js",
+            "command": "node __QWEN_HOME__/hooks/quality-gate.js",
             "name": "quality-gate",
             "timeout": 10000
           },
           {
             "type": "command",
-            "command": "node C:/Users/vansy/.qwen/hooks/auto-memory.js",
+            "command": "node __QWEN_HOME__/hooks/auto-memory.js",
             "name": "auto-memory",
+            "timeout": 10000
+          },
+          {
+            "type": "command",
+            "command": "node __QWEN_HOME__/hooks/improvement-tracker.js",
+            "name": "improvement-tracker",
+            "timeout": 10000
+          },
+          {
+            "type": "command",
+            "command": "node __QWEN_HOME__/hooks/protocol-updater.js",
+            "name": "protocol-updater",
             "timeout": 10000
           }
         ]
@@ -177,7 +219,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python C:/Users/vansy/.qwen/core/memory-distiller.py",
+            "command": "python __QWEN_HOME__/core/memory-distiller.py",
             "name": "memory-distiller",
             "timeout": 15000
           }
@@ -189,77 +231,32 @@
     "tavily": {
       "command": "npx",
       "args": ["-y", "tavily-mcp@latest"],
-      "description": "Real-time web search and news optimized for AI"
+      "description": "Real-time web search optimized for AI"
     },
     "exa": {
       "command": "npx",
       "args": ["-y", "exa-mcp-server@latest"],
-      "description": "Semantic search for code, academic research, and deep content"
+      "description": "Semantic search for code and research"
     },
     "brave-search": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-brave-search"],
-      "description": "Privacy-focused web search (2,000 free queries/month)"
+      "description": "Privacy-focused web search (2000 free queries/month)"
     },
     "web-research": {
       "command": "npx",
       "args": ["-y", "@mzxrai/mcp-webresearch@latest"],
-      "description": "Automated web research via headless browser"
-    },
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "description": "GitHub operations - repo management, PRs, issues, Actions"
-    },
-    "filesystem": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./"],
-      "description": "Secure local file read/write access"
+      "description": "Automated deep web research"
     },
     "fetch": {
       "command": "npx",
       "args": ["-y", "@kazuph/mcp-fetch"],
-      "description": "Raw URL content retrieval + Jina AI proxy"
+      "description": "Raw URL content retrieval"
     },
-    "memory": {
+    "filesystem": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"],
-      "description": "Local knowledge graph for persistent long-term AI memory"
-    },
-    "sequential-thinking": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
-      "description": "Complex problem decomposition and chain-of-thought reasoning"
-    },
-    "playwright": {
-      "command": "npx",
-      "args": ["-y", "@playwright/mcp", "--browser", "chrome"],
-      "description": "Browser automation and E2E testing via headless Chrome"
-    },
-    "context7": {
-      "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp@latest"],
-      "description": "Live documentation lookup for frontend/backend libraries"
-    },
-    "magic": {
-      "command": "npx",
-      "args": ["-y", "@magicuidesign/mcp@latest"],
-      "description": "Magic UI components for premium frontend animations"
-    },
-    "vercel": {
-      "type": "http",
-      "url": "https://mcp.vercel.com",
-      "description": "Cloud deployment and project management for web apps"
-    },
-    "firecrawl": {
-      "command": "npx",
-      "args": ["-y", "firecrawl-mcp"],
-      "env": { "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}" },
-      "description": "Advanced web scraping and crawling"
-    },
-    "Parallel Search MCP": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://search.parallel.ai/mcp"]
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./"],
+      "description": "Local filesystem access"
     }
   },
   "security": {

@@ -1,5 +1,6 @@
+- [user-content-creation](user/user-content-creation.md) — User creates educational videos about trading strategies, specifically IVB methodology
+- [user-profile](global-user-profile.md) — Core profile information about Alvansyah including name, hobbies, professional skills, and development env…
 - [token-plan-preference](feedback/token-plan-preference.md) — Token Plan preference with 66.7% cost savings over Lite Plan using flash models
-- [user-profile](global-user-profile.md) — Core profile information about Alvansyah including name, hobbies, professional skills, and development environment
 - [ivb-definition-correction](feedback-ivb-definition.md) — IVB stands for Initial Balance Breakout (NOT Initial Volume Breakout or Indicator Value B…
 - [output-language-preference](feedback-output-language.md) — User prefers English or Indonesian responses only
 - [user-profile](_global/user-profile.md) — Core profile information about Alvansyah including name, hobbies, and professional skills
