@@ -1,17 +1,22 @@
+﻿---
+description: Audit harness usage (agents, models, MCPs, skills)
 ---
-description: Audit pemakaian agents, models, MCP, dan skills harness
----
 
-Jalankan audit usage harness dengan perintah shell:
-powershell -ExecutionPolicy Bypass -File "C:\Users\vansy\.qwen\core\usage-audit.ps1"
+Run the harness usage audit script based on your Operating System:
 
-Kemudian sintesis hasilnya menjadi SATU tabel Markdown bersih dengan kolom:
-Komponen | Status | Detail
+If on Windows (PowerShell):
+powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\.qwen\core\usage-audit.ps1"
 
-Aturan tampilan:
-- Agents terpakai: tampilkan nama + jumlah invokasi + model yang dipakai
-- Agents unused: tampilkan hanya jumlah + daftar singkat (jangan per baris)
-- MCP: tampilkan yang terpakai dengan jumlah sessions, tandai yang "never"
-- Jangan dump output mentah script. Jangan thinking tags. Jangan emoji.
-- Akhiri dengan 2-3 insight: agent paling aktif, MCP dominan, dan 1 rekomendasi prune.
-- Tutup dengan --- lalu Sources: [usage-audit.ps1]
+If on macOS/Linux (requires PowerShell Core installed):
+pwsh -File "$HOME/.qwen/core/usage-audit.ps1"
+
+Synthesize the JSON output into ONE clean Markdown table with columns:
+Component | Status | Details
+
+Display rules:
+- Active agents: display name + invocation count + model used
+- Unused agents: display only the count + a brief list (not one per line)
+- MCPs: display active ones with session counts, mark unused ones as "never"
+- Do not dump raw JSON output. No thinking tags. No emojis.
+- End with 2-3 insights: most active agent, dominant MCP, and 1 prune recommendation.
+- Close with --- then Sources: [usage-audit.ps1]
