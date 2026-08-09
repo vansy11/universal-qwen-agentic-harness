@@ -29,7 +29,7 @@ Universal Qwen Agentic Harness — Orchestrator-Worker architecture driven by na
 
 ---
 
-### 2. Skills (41)
+### 2. Skills (42)
 
 | Category        | Skills                                                                                                                                                                                                                                             |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -131,7 +131,7 @@ Universal Qwen Agentic Harness — Orchestrator-Worker architecture driven by na
 | Component       | Count   |
 | --------------- | ------- |
 | **Agents**      | 30      |
-| **Skills**      | 41      |
+| **Skills**      | 42      |
 | **Commands**    | 15      |
 | **Hooks**       | 17      |
 | **Rules**       | 13      |

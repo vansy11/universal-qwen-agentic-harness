@@ -50,7 +50,7 @@ This harness is MIT-licensed open source. It works natively with the Qwen Code C
 | Included    | Count | What it gives you                                                                         |
 | ----------- | ----: | ----------------------------------------------------------------------------------------- |
 | Agents      |    30 | Management, programming, infrastructure, research, finance, and specialized work          |
-| Skills      |    41 | AI core, programming, security, DevOps, research, finance, and system workflows           |
+| Skills      |    42 | AI core, programming, security, DevOps, research, finance, and system workflows           |
 | Commands    |    15 | Slash commands for instant agent delegation                                               |
 | Hooks       |    17 | Context pruning, prompt routing, security checks, quality enforcement, memory persistence |
 | Rules       |    13 | Coding standards, output contracts, security baselines, execution protocols               |
@@ -388,7 +388,7 @@ Check that `prompt-router.js` is registered as a UserPromptSubmit hook. Heavy pr
 ## Features
 
 - **30 specialized agents** spanning management, programming, infrastructure, research, finance, and security
-- **41 technical skills** for rapid development across AI, security, DevOps, and full-stack workflows
+- **42 technical skills** for rapid development across AI, security, DevOps, and full-stack workflows
 - **15 slash commands** for instant agent delegation
 - **17 universal hooks** for automatic context pruning, prompt routing, security enforcement, quality gating, and memory persistence
 - **13 rule sets** covering coding standards, output contracts, security baselines, and execution protocols
