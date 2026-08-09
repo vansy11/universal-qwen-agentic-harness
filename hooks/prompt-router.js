@@ -1,4 +1,4 @@
-const QWEN_HOME = require('path').resolve(__dirname, '..').replace(/\\/g, '/');
+﻿const QWEN_HOME = require('path').resolve(__dirname, '..').replace(/\\/g, '/');
 let input = '';
 process.stdin.on('data', (chunk) => input += chunk);
 process.stdin.on('end', () => {
@@ -38,7 +38,8 @@ process.stdin.on('end', () => {
                 { kw: ['error','bug','fix','debug','crash','exception','traceback'], agent: 'refactor-engineer', skill: 'error-resolution-loop' },
                 { kw: ['test','tdd','jest','pytest','spec','coverage','unit test'], agent: 'code-reviewer', skill: 'tdd-workflow' },
                 { kw: ['network','dns','firewall','routing','ping','tcp','ssh'], agent: 'network-engineer', skill: 'network-diagnostics' },
-                { kw: ['animation','gsap','framer','motion','transition'], agent: 'frontend-engineer', skill: 'ui-animation-gsap-framer' },
+                { kw: ['animation','gsap','framer','motion','transition','motion.dev'], agent: 'frontend-engineer', skill: 'ui-animation-gsap-framer' },
+                { kw: ['design','ui ','ux','landing page','component','tailwind','css','website','frontend','dashboard'], agent: 'frontend-engineer', skill: 'ui-ux-pro-max' },
                 { kw: ['design system','token','component library','figma'], agent: 'ui-ux-designer', skill: 'ui-ux-design-system' },
                 { kw: ['doc','documentation','swagger','openapi','readme'], agent: 'backend-engineer', skill: 'api-doc-generator' },
                 { kw: ['automate','script','cron','batch'], agent: 'execution-engineer', skill: 'workflow-automation' },
