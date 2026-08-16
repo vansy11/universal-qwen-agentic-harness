@@ -1,13 +1,55 @@
-const {execSync}=require('child_process'),fs=require('fs'),path=require('path');
-const QH=path.resolve(__dirname,'..');
-const cases=JSON.parse(fs.readFileSync(QH+'/evals/cases.json','utf8'));
-let pass=0;
-for(const cs of cases){
-  try{
-    const out=execSync(`node "${QH}/hooks/prompt-router.js"`,{input:JSON.stringify({prompt:cs.prompt}),timeout:15000}).toString();
-    const ok=out.includes(cs.expect);
-    if(ok)pass++;
-    console.log((ok?'PASS':'FAIL')+' | '+cs.prompt+' -> '+cs.expect);
-  }catch(e){console.log('FAIL | '+cs.prompt+' (error)');}
+﻿const { chromium } = require('playwright');
+
+async function autoEvaluate(generatedAppUrl, originalPrompt) {
+    let browser;
+    const evaluationReport = [];
+
+    try {
+        // Launch Playwright headless browser
+        browser = await chromium.launch({ headless: true });
+        const page = await browser.newPage();
+
+        // 1. Check if app crashes on load
+        page.on('pageerror', error => {
+            evaluationReport.push(`CRITICAL FAIL: Runtime error - ${error.message}`);
+        });
+
+        await page.goto(generatedAppUrl, { waitUntil: 'networkidle' });
+
+        // 2. Check if 3D Canvas is actually rendering
+        const isCanvasRendered = await page.evaluate(() => {
+            const canvas = document.querySelector('canvas');
+            return canvas && canvas.width > 0 && canvas.height > 0;
+        });
+
+        if (!isCanvasRendered) {
+            evaluationReport.push("FAIL: 3D Canvas element is missing or not rendering.");
+        }
+
+        // 3. Check Scroll Animation
+        await page.evaluate(() => window.scrollBy(0, window.innerHeight));
+        await page.waitForTimeout(1500); // Wait for animation to trigger
+        
+        const scrollAnimationTriggered = await page.evaluate(() => {
+            const animatedElement = document.querySelector('[data-animate]'); 
+            if (!animatedElement) return false;
+            const style = window.getComputedStyle(animatedElement);
+            return style.opacity !== '0' || style.transform !== 'none';
+        });
+
+        if (!scrollAnimationTriggered) {
+            evaluationReport.push("FAIL: Scroll animations are not triggering.");
+        }
+
+    } catch (error) {
+        evaluationReport.push(`CRITICAL FAIL: Evaluation script crashed - ${error.message}`);
+    } finally {
+        if (browser) await browser.close();
+    }
+
+    return evaluationReport.length === 0
+        ? { status: "PASS", message: "All runtime evaluations passed successfully." }
+        : { status: "FAIL", reasons: evaluationReport };
 }
-console.log(`\nRouting precision: ${pass}/${cases.length} (${Math.round(pass/cases.length*100)}%)`);
+
+module.exports = { autoEvaluate };

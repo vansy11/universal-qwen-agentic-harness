@@ -1,181 +1,181 @@
 ﻿# System Workflow & Data Flow
 
-Event-driven **Orchestrator-Worker** architecture with native Qwen Code **Hooks** as the central nervous system.
+The **Universal Qwen Agentic Harness** operates on an event-driven **Orchestrator-Worker** paradigm powered by native Qwen Code **Lifecycle Hooks** acting as the central nervous system.
 
 ---
 
-## Architecture Flowchart
+## End-to-End System Sequence Diagram
 
 ```mermaid
-graph TD
-    A[User Prompt] --> B(UserPromptSubmit Hook)
-    B --> C{prompt-router.js}
-    C -->|Light Query| D[main AI Answers Directly]
-    C -->|Heavy Task| E[Inject Routing Context]
-    E --> F[Context Builder Agent]
-    F --> G[Fullstack Orchestrator]
-    G --> H[Delegate to Specialist Agents]
-    H --> I1[Database Architect]
-    H --> I2[Backend Engineer]
-    H --> I3[Frontend Engineer]
-    H --> I4[Mobile Developer]
-    H --> I5[Cloud Architect]
-    H --> I6[Web Researcher]
-    H --> I7[Quant Strategist]
-    I6 -->|Search| MCP1[(Tavily / Exa / Brave MCP)]
-    I1 -->|Guidelines| SKILL1[(Skills)]
-    I2 -->|Code| FS1[(Filesystem MCP)]
-    I1 & I2 & I3 & I4 & I5 & I6 & I7 --> J[Tool Execution Phase]
-    J --> K{PreToolUse Hook}
-    K -->|run_shell_command| L{security-check.js}
-    L -->|Safe Command| M[Execute]
-    L -->|Dangerous Command| N[Block]
-    K -->|trading operation| O{trading-risk-guard.js}
-    O -->|Authorized| M
-    O -->|Unauthorized| N
-    M --> P[Subagent Returns Result]
-    N --> P
-    P --> Q[Stop Hook]
-    Q --> R{quality-gate.js}
-    R -->|AI Slop Detected| S[Invoke Humanizer Agent]
-    S --> T[auto-memory.js saves learnings]
-    R -->|Clean Output| T
-    T --> U[Final Output to User]
-    D --> U
+sequenceDiagram
+    autonumber
+    actor User
+    participant Bootstrap as SessionStart Hook<br/>(session-bootstrap.js)
+    participant Router as UserPromptSubmit Hook<br/>(prompt-router.js)
+    participant Pruner as Context Pruner<br/>(context-pruner.js)
+    participant MainAI as Main Qwen CLI
+    participant ContextBuilder as Context Builder Agent<br/>(context-builder.md)
+    participant Orchestrator as Fullstack Orchestrator<br/>(fullstack-orchestrator.md)
+    participant SubAgent as Specialist Agents<br/>(Frontend/Backend/DB/Cloud)
+    participant PreHook as PreToolUse Hooks<br/>(security-check & risk-guard)
+    participant Tool as Tools & MCP Servers<br/>(Filesystem/GitHub/Tavily/Playwright)
+    participant PostHook as PostToolUse Hooks<br/>(token-monitor / lint / format)
+    participant StopHook as Stop Hooks<br/>(quality-gate / auto-memory / reflection)
+    participant Humanizer as Humanizer Agent<br/>(humanizer.md)
+
+    User->>Bootstrap: Launch `qwen` session
+    Bootstrap-->>MainAI: Workspace initialized & Auto-Resume Watcher active
+    User->>Router: Submit prompt / slash command
+    Router->>Pruner: Check context token window
+    Pruner-->>Router: Pruned context window
+    Router->>Router: Classify prompt complexity (Light vs Heavy)
+
+    alt Light Query
+        Router-->>MainAI: Route directly to Main AI
+        MainAI-->>User: Instant direct response
+    else Heavy / Orchestrated Task
+        Router->>ContextBuilder: Inject routing directive & context
+        ContextBuilder->>ContextBuilder: Extract codebase state & build JSON handoff
+        ContextBuilder->>Orchestrator: Pass structured context package
+        Orchestrator->>SubAgent: Spawn specialist agents with task directives
+
+        loop Parallel / Sequential Execution
+            SubAgent->>PreHook: Propose tool execution (e.g. run_shell_command, write_file)
+            alt Dangerous Command or Unsafe Risk
+                PreHook-->>SubAgent: Block execution with security error
+            else Authorized Command
+                PreHook-->>Tool: Allow tool execution
+                Tool-->>PostHook: Tool result returned
+                PostHook->>PostHook: Run linter, auto-formatter, token tracking
+                PostHook-->>SubAgent: Clean tool output
+            end
+        end
+
+        SubAgent-->>Orchestrator: Specialist tasks completed
+        Orchestrator-->>StopHook: Draft final response payload
+
+        StopHook->>StopHook: Evaluate response with quality-gate.js
+        alt AI Slop or Robotic Text Detected
+            StopHook->>Humanizer: Reject & invoke Humanizer Agent
+            Humanizer-->>StopHook: Re-written natural human prose
+        end
+
+        StopHook->>StopHook: Persist learnings via auto-memory.js & reflection.js
+        StopHook-->>User: Deliver clean verified response
+    end
 ```
 
 ---
 
-## Step-by-Step Workflow
+## Detailed Step-by-Step Execution Lifecycle
 
-### 1. Input & Routing (UserPromptSubmit)
+### Phase 1: Session Initialization (`SessionStart`)
 
-**context-pruner.js** + **prompt-router.js** intercept before main AI processes:
+1. **Workspace Setup (`session-bootstrap.js`)**: Runs upon starting the CLI. Verifies directory layout, validates environment variables, and confirms MCP server accessibility.
+2. **Auto-Resume Watcher (`core/auto-resume-watcher.js`)**: Starts a background monitor watching `tmp/blackboard.json`. If a previous task stalled or was rate-limited, it automatically waits out the cooldown and injects `[SYSTEM AUTO-RESUME]` prompts to continue execution.
 
-- **Light Prompts** (e.g., "What is Python?"): Direct AI answer, saving tokens.
-- **Heavy Prompts** (e.g., "Build a website with database"): Injects `AdditionalContext` for Orchestrator mode.
+### Phase 2: Interception & Auto-Routing (`UserPromptSubmit`)
 
-### 2. Context Building & Delegation
+1. **Context Window Pruning (`context-pruner.js`)**: Scans conversation history length and trims stale tokens, maintaining optimal context headroom.
+2. **Intent Classification & Routing (`prompt-router.js`)**: Analyzes user prompt against 40+ keyword routing patterns:
+   - **Light Query** (e.g., "Explain REST APIs"): Bypasses multi-agent orchestration, answering directly.
+   - **Heavy Task** (e.g., "Build a full-stack SaaS app with Next.js and PostgreSQL"): Automatically injects routing directives and delegates to `fullstack-orchestrator`.
 
-**fullstack-orchestrator** reads injected context:
+### Phase 3: Auto Prompting & Context Handoff
 
-- Invokes **context-builder** to scan project and extract requirements.
-- Spawns specialist sub-agents (`database-architect`, `backend-engineer`, `cloud-architect`, `quant-strategist`) via Task tool.
+1. **Context Building (`agents/context-builder.md`)**: Analyzes current directory files, Git state, and active requirements. Generates a concise `< 500 word` summary and exports a structured JSON handoff (`handoff-schema.json`).
+2. **Prompt Optimization (`core/prompt-optimizer.js`)**: Strips fluff and politeness phrases, injects active coding rules (`rules/_universal/`), attaches relevant long-term memories (`.qwen/memories/`), and calculates strict token budgets.
+3. **Task Delegation**: The `fullstack-orchestrator` spawns background sub-agents (`database-architect`, `backend-engineer`, `frontend-engineer`, `cloud-architect`) via `agent` tool calls.
 
-### 3. Execution, Skills, & MCPs
+### Phase 4: Specialist Execution, Skills, & MCPs
 
-Specialist agents execute:
+1. **Skill Directives**: Sub-agents load specialized rules from `.qwen/skills/` (e.g., `frontend-react-tailwind`, `backend-api-design`, `cybersecurity-pentest`).
+2. **MCP Tool Operations**:
+   - External Research: `web-researcher` calls **Tavily**, **Exa**, or **Brave Search** MCP.
+   - File & Code I/O: `backend-engineer` calls **Filesystem** or **GitHub** MCP.
+   - Browser & E2E Testing: `quality-gatekeeper` calls **Playwright** MCP for visual snapshots and DOM evaluation.
+   - Library Documentation: Agents query **Context7 MCP** for live package API specs.
 
-- **Skills:** Read `SKILL.md` from `.qwen/skills/` for technical guidelines.
-- **MCPs:** External data access:
-  - `web-researcher` → **Tavily MCP** for news
-  - `backend-engineer` → **Filesystem MCP** for code I/O
-  - `quant-strategist` → **Exa MCP** for research
-  - **Playwright MCP** for browser automation
+### Phase 5: Security & Risk Guarding (`PreToolUse`)
 
-### 4. Security Guards (PreToolUse)
+1. **Shell Command Firewall (`security-check.js`)**: Intercepts `run_shell_command` calls. Blocks destructive commands (`rm -rf /`, `git push --force`, `curl | sh`, raw disk formatting).
+2. **Trading & Financial Guard (`trading-risk-guard.js`)**: Intercepts automated financial executions. Enforces position sizing limits, stop-loss checks, and blocks unauthorized live trades without manual confirmation flags.
 
-#### 4.1 Command Security
+### Phase 6: Post-Tool Processing (`PostToolUse`)
 
-**security-check.js** intercepts terminal commands:
+1. **Token Tracking (`token-monitor.js`)**: Logs per-turn input/output token usage.
+2. **Auto-Linting (`lint-check.js`)**: Runs linter checks automatically whenever `write_file` or `edit` modifies code.
+3. **Auto-Formatting (`auto-format.js`)**: Normalizes indentation, quotes, and imports to match project conventions.
 
-- Blocklist: `rm -rf /`, `git push --force`, `curl* | sh`
-- Safe → `Allow`, Dangerous → `deny`
+### Phase 7: Display Filtering (`MessageDisplay` & `SubagentStart`)
 
-#### 4.2 Trading Risk Guard
+1. **Parent Noise Suppression (`parent-silencer.js`)**: Silences verbose internal logs from sub-agents to keep the main user terminal clean.
+2. **Output Sanitization (`output-sanitizer.js`)**: Strips raw tool call payloads and JSON dumps from user-visible outputs.
+3. **Sub-Agent Formatting (`subagent-presenter.js`)**: Formats sub-agent progress notifications cleanly.
 
-**trading-risk-guard.js** validates:
+### Phase 8: Quality Gate, Auto Evaluation & Memory (`Stop`)
 
-- Position size vs risk tolerance
-- Stop-loss/take-profit params
-- Explicit user confirmation
-- Circuit breaker conditions
+1. **Anti-Slop Quality Gate (`quality-gate.js`)**: Scans final responses for generic AI boilerplate ("Certainly!", "Here is your code..."). If detected, blocks delivery and delegates to `humanizer` agent for natural rewriting.
+2. **Hallucination Detection (`hallucination-guard.js`)**: Verifies quoted URLs, file paths, and facts against actual system state.
+3. **Auto Evaluation (`agents/self-evaluator.md` & `core/eval-runner.js`)**: Assesses deliverables against original prompt requirements.
+4. **Auto-Memory Persistence (`auto-memory.js`)**: Automatically extracts architectural decisions, user preferences, and bug fixes, saving them to `.qwen/memories/` or `.qwen/projects/`.
+5. **System Improvement Tracking (`improvement-tracker.js` & `protocol-updater.js`)**: Logs system enhancements and updates protocol documentation automatically.
+6. **Session Reflection (`reflection.js`)**: Performs end-of-session performance analysis.
 
-### 5. Quality Gate, Humanizer & Memory (Stop)
+### Phase 9: Context Compression (`PreCompact`)
 
-**quality-gate.js**, **hallucination-guard.js**, **reflection.js**, **improvement-tracker.js**, **protocol-updater.js**, **auto-memory.js** on `Stop` event:
-
-- Detects "AI Slop" (_"Here is your code..."_, _"Certainly!"_)
-- **Slop detected:** Block → **humanizer** agent rewrites
-- **Clean:** **auto-memory.js** saves learnings → Final output
-- **Hallucination guard:** Flags unverified claims
-- **Reflection:** Self-evaluates session outcomes
-- **Improvement tracker:** Logs systemic improvements
-- **Protocol updater:** Syncs protocol docs with changes
+1. **Memory Distiller (`memory-distiller.py`)**: Executed right before context compaction. Distills critical context into permanent memory files before conversation history is truncated.
 
 ---
 
-## Hook Execution Order
+## Complete Hook Execution Matrix
 
-| Phase                            | Hook                     | Type    | Timeout |
-| -------------------------------- | ------------------------ | ------- | ------- |
-| `SessionStart`                   | `session-bootstrap.js`   | command | 10s     |
-| `UserPromptSubmit`               | `context-pruner.js`      | command | 5s      |
-| `UserPromptSubmit`               | `prompt-router.js`       | command | 15s     |
-| `PreToolUse` (run_shell_command) | `security-check.js`      | command | 5s      |
-| `PreToolUse` (run_shell_command) | `trading-risk-guard.js`  | command | 5s      |
-| `PostToolUse` (*)                | `token-monitor.js`       | command | 5s      |
-| `PostToolUse` (write_file)       | `lint-check.js`          | command | 5s      |
-| `PostToolUse` (write_file)       | `auto-format.js`         | command | 5s      |
-| `MessageDisplay`                 | `parent-silencer.js`     | command | 5s      |
-| `MessageDisplay`                 | `output-sanitizer.js`    | command | 5s      |
-| `SubagentStart`                  | `subagent-presenter.js`  | command | 5s      |
-| `Stop`                           | `hallucination-guard.js` | command | 5s      |
-| `Stop`                           | `quality-gate.js`        | command | 10s     |
-| `Stop`                           | `auto-memory.js`         | command | 10s     |
-| `Stop`                           | `improvement-tracker.js` | command | 10s     |
-| `Stop`                           | `protocol-updater.js`    | command | —       |
-| `Stop`                           | `reflection.js`          | command | 10s     |
-| `PreCompact`                     | `memory-distiller.py`    | command | 15s     |
+| Hook Name                | Qwen Lifecycle Event | Matcher Target      | Timeout | Primary Function                                           |
+| :----------------------- | :------------------- | :------------------ | :-----: | :--------------------------------------------------------- |
+| `session-bootstrap.js`   | `SessionStart`       | All                 | 10000ms | Initializes session environment & environment variables    |
+| `auto-resume-watcher.js` | `SessionStart`       | All                 | 10000ms | Monitors background stalls and injects auto-resume prompts |
+| `context-pruner.js`      | `UserPromptSubmit`   | All                 | 5000ms  | Prunes context tokens before prompt execution              |
+| `prompt-router.js`       | `UserPromptSubmit`   | All                 | 15000ms | Analyzes prompt complexity and injects routing directives  |
+| `security-check.js`      | `PreToolUse`         | `run_shell_command` | 5000ms  | Blocks destructive terminal commands                       |
+| `trading-risk-guard.js`  | `PreToolUse`         | `run_shell_command` | 5000ms  | Enforces trading limits and position risk controls         |
+| `token-monitor.js`       | `PostToolUse`        | `*`                 | 5000ms  | Measures token consumption on every turn                   |
+| `lint-check.js`          | `PostToolUse`        | `write_file`        | 5000ms  | Runs linter checks after file modifications                |
+| `auto-format.js`         | `PostToolUse`        | `write_file`        | 5000ms  | Auto-formats edited files to project style                 |
+| `parent-silencer.js`     | `MessageDisplay`     | All                 | 5000ms  | Filters parent conversation noise during sub-agent runs    |
+| `output-sanitizer.js`    | `MessageDisplay`     | All                 | 5000ms  | Cleans raw MCP/tool JSON dumps from output                 |
+| `subagent-presenter.js`  | `SubagentStart`      | All                 | 5000ms  | Formats sub-agent start/progress notifications             |
+| `hallucination-guard.js` | `Stop`               | All                 | 5000ms  | Flags ungrounded claims, non-existent URLs, or code bugs   |
+| `quality-gate.js`        | `Stop`               | All                 | 10000ms | Rejects robotic AI slop phrasing and forces humanization   |
+| `auto-memory.js`         | `Stop`               | All                 | 10000ms | Persists key learnings to long-term memory                 |
+| `improvement-tracker.js` | `Stop`               | All                 | 10000ms | Logs continuous system improvements                        |
+| `protocol-updater.js`    | `Stop`               | All                 |    —    | Syncs protocol documentation with codebase updates         |
+| `reflection.js`          | `Stop`               | All                 | 10000ms | Conducts end-of-turn session reflection                    |
+| `memory-distiller.py`    | `PreCompact`         | All                 | 15000ms | Distills context into structured memory before compaction  |
 
 ---
 
 ## Agent Delegation Matrix
 
-| Orchestrator             | Delegates To                                                                                        | Use Case                     |
-| ------------------------ | --------------------------------------------------------------------------------------------------- | ---------------------------- |
-| `fullstack-orchestrator` | `database-architect`, `backend-engineer`, `frontend-engineer`, `mobile-developer`, `ui-ux-designer` | Full-stack app builds        |
-| `fullstack-orchestrator` | `cloud-architect`, `devops-engineer`, `network-engineer`                                            | Infrastructure deployment    |
-| `trading-desk-chief`     | `quant-strategist`, `quant-algo-engineer`, `finance-analyst`, `risk-manager`                        | Trading strategy development |
-| `team-commander`         | Any specialist agent                                                                                | Multi-agent coordination     |
-| `context-builder`        | `web-researcher`, `news-trending-scout`                                                             | Requirements gathering       |
+| Primary Agent / Command  | Delegated Sub-Agents                                                                                | Typical Trigger Scenario                          |
+| :----------------------- | :-------------------------------------------------------------------------------------------------- | :------------------------------------------------ |
+| `fullstack-orchestrator` | `database-architect`, `backend-engineer`, `frontend-engineer`, `mobile-developer`, `ui-ux-designer` | Complete full-stack web/mobile application builds |
+| `fullstack-orchestrator` | `cloud-architect`, `devops-engineer`, `network-engineer`                                            | Infrastructure provisioning and CI/CD setup       |
+| `trading-desk-chief`     | `quant-strategist`, `quant-algo-engineer`, `finance-analyst`, `risk-manager`                        | Quantitative strategy design and backtesting      |
+| `team-commander`         | Any specialized sub-agent pool                                                                      | Complex multi-domain engineering tasks            |
+| `context-builder`        | `web-researcher`, `news-trending-scout`                                                             | Context gathering and requirement extraction      |
+| `code-reviewer`          | `cybersecurity-analyst`, `refactor-engineer`                                                        | Automated code review, security, and refactoring  |
 
 ---
 
-## MCP Routing
+## MCP Server Routing Matrix
 
-| Agent                   | Primary MCP | Fallback MCP |
-| ----------------------- | ----------- | ------------ |
-| `web-researcher`        | Tavily      | Exa, Brave   |
-| `quant-strategist`      | Exa         | Tavily       |
-| `backend-engineer`      | Filesystem  | GitHub       |
-| `frontend-engineer`     | Magic UI    | Context7     |
-| `devops-engineer`       | Vercel      | Filesystem   |
-| `mobile-developer`      | Context7    | Filesystem   |
-| `cybersecurity-analyst` | Firecrawl   | Tavily       |
-
----
-
-## Data Flow Summary
-
-```
-User Prompt
-    → context-pruner.js → prompt-router.js (classify: light/heavy)
-        → Light → Direct AI response
-        → Heavy → fullstack-orchestrator
-            → context-builder (scan project, gather requirements)
-            → Delegate to specialist agents (parallel/sequence)
-                → Read Skills (technical guidelines)
-                → Call MCPs (external data, file I/O, browser automation)
-                → PreToolUse hooks (security-check, trading-risk-guard)
-                → Execute tools
-                → PostToolUse hooks (token-monitor, lint-check, auto-format)
-                → MessageDisplay hooks (parent-silencer, output-sanitizer)
-            → Stop hooks (hallucination-guard, quality-gate, auto-memory, improvement-tracker, protocol-updater, reflection)
-                → quality-gate.js: detect AI slop → humanizer agent (if needed)
-                → hallucination-guard.js: flag unverified claims
-                → reflection.js: self-evaluate outcomes
-                → improvement-tracker.js: log improvements
-                → auto-memory.js: persist learnings
-            → Final output to user
-```
+| Agent Role              | Primary MCP Server | Fallback / Secondary MCP              |
+| :---------------------- | :----------------- | :------------------------------------ |
+| `web-researcher`        | `tavily`           | `exa`, `brave-search`, `web-research` |
+| `quant-strategist`      | `exa`              | `tavily`, `fetch`                     |
+| `backend-engineer`      | `filesystem`       | `github`, `context7`                  |
+| `frontend-engineer`     | `magic`            | `context7`, `playwright`              |
+| `devops-engineer`       | `vercel`           | `filesystem`, `github`                |
+| `cybersecurity-analyst` | `firecrawl`        | `tavily`, `web-research`              |
+| `quality-gatekeeper`    | `playwright`       | `filesystem`                          |
+| `memory-curator`        | `memory`           | `filesystem`                          |

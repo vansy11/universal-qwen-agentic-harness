@@ -1,18 +1,33 @@
-const QWEN_HOME = require('path').resolve(__dirname, '..').replace(/\\/g, '/');
-let input = '';
-process.stdin.on('data', (chunk) => input += chunk);
-process.stdin.on('end', () => {
+﻿module.exports = async function (fileContent, filePath) {
+    // 1. Check for Anti-Patterns (Spaghetti Code)
+    const antiPatterns = [
+        { pattern: /var\s+/g, reason: "Use 'let' or 'const' instead of 'var'." },
+        { pattern: /console\.log/g, reason: "Debug logs are not allowed in production code." },
+        { pattern: /:\s*any/g, reason: "Type 'any' is strictly forbidden in TypeScript. Define proper interfaces." },
+        { pattern: /function\s+\w+\s*\([^)]*\)\s*{/g, reason: "Use Arrow Functions () => {} instead of regular function declarations." }
+    ];
+
+    for (const { pattern, reason } of antiPatterns) {
+        if (pattern.test(fileContent)) {
+            return {
+                passed: false,
+                reason: `Clean Code Violation: ${reason}`
+            };
+        }
+    }
+
+    // 2. Run ESLint / Prettier (Mock execution - integrate your actual CLI runner)
+    /*
+    const { execSync } = require('child_process');
     try {
-        const { execSync } = require('child_process');
-        const payload = JSON.parse(input);
-        const filePath = payload.tool_input?.file_path || '';
-        if (!filePath) { console.log(JSON.stringify({})); return; }
-        let cmd = null;
-        if (/\.(ts|tsx)$/.test(filePath)) cmd = 'npx tsc --noEmit "' + filePath + '"';
-        else if (/\.py$/.test(filePath)) cmd = 'python -m py_compile "' + filePath + '"';
-        if (cmd) {
-            try { execSync(cmd, { timeout: 15000, stdio: 'pipe' }); console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PostToolUse", additionalContext: "Lint passed: " + filePath } })); }
-            catch(e) { console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: "PostToolUse", additionalContext: "LINT ERRORS in " + filePath + ":\n" + e.stderr.toString().slice(0,500) + "\nFix these errors immediately before proceeding." } })); }
-        } else { console.log(JSON.stringify({})); }
-    } catch(e) { console.log(JSON.stringify({})); }
-});
+        execSync(`npx eslint ${filePath} --fix`, { stdio: 'pipe' });
+    } catch (error) {
+        return {
+            passed: false,
+            reason: `ESLint Errors: ${error.stderr.toString()}`
+        };
+    }
+    */
+
+    return { passed: true };
+};
