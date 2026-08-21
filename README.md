@@ -17,7 +17,7 @@
 
 ## Executive Summary
 
-The **Universal Qwen Agentic Harness** transforms the Qwen Code CLI into an autonomous, enterprise-grade software engineering and research environment. Rather than relying on a single context window to write, test, and review code, this harness provides an **Orchestrator-Worker** architecture powered by 18 native lifecycle hooks, 30 specialist sub-agents, 45 technical skills, 15 slash commands, 13 enforced rule sets, and 15 Model Context Protocol (MCP) integrations.
+The **Universal Qwen Agentic Harness** transforms the Qwen Code CLI into an autonomous, enterprise-grade software engineering and research environment. Rather than relying on a single context window to write, test, and review code, this harness provides an **Orchestrator-Worker** architecture powered by 18 native lifecycle hooks, 30 specialist sub-agents, 46 technical skills, 15 slash commands, 13 enforced rule sets, and 15 Model Context Protocol (MCP) integrations.
 
 ```
 User Prompt ──► Prompt Router ──► Orchestration ──► Specialist Agents ──► Security Check ──► Quality Gate ──► Humanized Output
@@ -30,7 +30,7 @@ User Prompt ──► Prompt Router ──► Orchestration ──► Specialist
 | Component             | Count  | Functionality                                                                                                   |
 | :-------------------- | :----: | :-------------------------------------------------------------------------------------------------------------- |
 | **Specialist Agents** | **30** | Domain experts across Management, Frontend, Backend, Database, Cloud, Security, Data, and Quantitative Finance  |
-| **Technical Skills**  | **45** | Production guidelines and workflows for full-stack, security, DevOps, data pipelines, and quantitative trading  |
+| **Technical Skills**  | **46** | Production guidelines and workflows for full-stack, security, DevOps, data pipelines, and quantitative trading  |
 | **Slash Commands**    | **15** | Direct triggers for instant agent delegation (`/fullstack`, `/review`, `/research`, `/quant`, `/pentest`, etc.) |
 | **Lifecycle Hooks**   | **18** | Cross-platform Node.js & Python scripts enforcing security, token efficiency, quality gates, and auto-memory    |
 | **Enforced Rules**    | **13** | Strict coding standards, security baselines, output formatting, and verification protocols                      |
