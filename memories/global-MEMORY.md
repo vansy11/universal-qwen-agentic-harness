@@ -1,3 +1,0 @@
-- [user-profile](user/profile.md) — Core profile information about Alvansyah including name, hobbies, and professional skills
-- [ivb-definition-correction](feedback/ivb-definition.md) — IVB stands for Initial Balance Breakout (NOT Initial Volume Breakout or Indicator Value B…
-- [output-language-preference](feedback/output-language.md) — User prefers English or Indonesian responses only
