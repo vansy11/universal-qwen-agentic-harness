@@ -1,6 +1,6 @@
 ﻿# System Architecture
 
-The **Universal Qwen Agentic Harness** is an enterprise-grade, event-driven **Orchestrator-Worker** performance system built specifically for the Qwen Code CLI. It turns a standard LLM coding assistant into a coordinated autonomous engineering suite that plans, delegates, executes, self-evaluates, and persists learnings automatically.
+The **Universal Qwen Agentic Harness** is an enterprise-grade, event-driven **Orchestrator-Worker** multi-agent platform designed specifically for the Qwen Code CLI. It transforms a single-context LLM coding assistant into a coordinated autonomous engineering suite that plans, delegates, executes, self-evaluates, and persists learnings automatically.
 
 ---
 
@@ -41,12 +41,12 @@ The **Universal Qwen Agentic Harness** is an enterprise-grade, event-driven **Or
                                                          │
                                                ┌─────────▼──────────┐
                                                │ Specialist Agents  │
-                                               │ (Sub-Agent Pool)   │
+                                               │ (30 Sub-Agents)    │
                                                └─────────┬──────────┘
                                                          │
                                                ┌─────────▼──────────┐
-                                               │ Tool Execution     │
-                                               │ (Skills & MCPs)    │
+                                               │ Tool & MCP Layer   │
+                                               │ (45 Skills, 15 MCP)│
                                                └─────────┬──────────┘
                                                          │
                                                ┌─────────▼──────────┐
@@ -82,13 +82,13 @@ The **Universal Qwen Agentic Harness** is an enterprise-grade, event-driven **Or
 - **Prompt Optimizer (`core/prompt-optimizer.js`)**: Minifies whitespace, eliminates redundant politeness phrases, injects active rules and relevant long-term memories, and calculates token budgets prior to API dispatch.
 - **Prompt Router (`hooks/prompt-router.js`)**: Matches incoming prompts against keyword routing rules, classifying prompts into light (direct) or heavy (orchestrated) execution paths.
 
-### 3. Lifecycle Hooks Engine (17 Hooks)
+### 3. Lifecycle Hooks Engine (18 Hook Scripts)
 
-Cross-platform Node.js scripts executed automatically by Qwen Code at specific turn boundaries:
+Cross-platform Node.js & Python scripts executed automatically by Qwen Code at specific turn boundaries:
 
 - **Session Start**: Environment preparation and session state initialization (`session-bootstrap.js`, `auto-resume-watcher.js`).
 - **Prompt Interception**: Context pruning and complexity routing (`context-pruner.js`, `prompt-router.js`).
-- **Tool Guarding**: Command security checking and financial risk boundaries (`security-check.js`, `trading-risk-guard.js`).
+- **Tool Guarding**: Command security checking, trading risk boundaries, and mathematical rigor (`security-check.js`, `trading-risk-guard.js`, `quant-math-guard.js`).
 - **Post-Tool Processing**: Real-time token monitoring, automatic code linting, and standard formatting (`token-monitor.js`, `lint-check.js`, `auto-format.js`).
 - **Display Filtering**: Parent noise suppression and raw tool output sanitization (`parent-silencer.js`, `output-sanitizer.js`, `subagent-presenter.js`).
 - **Stop Validation & Reflection**: Quality gating, anti-slop verification, hallucination guards, auto-memory persistence, improvement tracking, protocol synchronization, and session reflection (`quality-gate.js`, `hallucination-guard.js`, `auto-memory.js`, `reflection.js`, `improvement-tracker.js`, `protocol-updater.js`).
@@ -104,7 +104,7 @@ Cross-platform Node.js scripts executed automatically by Qwen Code at specific t
 ### 5. Auto Loop & Resiliency Engine
 
 - **Self-Paced Loop Scheduler (`/loop` command & `loop_wakeup` tool)**: Enables scheduled and background recurring tasks up to 24 hours.
-- **Auto-Resume Watcher (`core/auto-resume-watcher.js`)**: Monitors background execution state (`blackboard.json`). When execution stalls or hits API rate limits, it waits out cooldown periods and injects `[SYSTEM AUTO-RESUME]` recovery prompts to resume execution autonomously.
+- **Auto-Resume Watcher (`core/auto-resume-watcher.js`)**: Monitors background execution state (`tmp/blackboard.json`). When execution stalls or hits API rate limits, it waits out cooldown periods and injects `[SYSTEM AUTO-RESUME]` recovery prompts to resume execution autonomously.
 
 ### 6. Long-Term Memory & Knowledge Graph
 
@@ -117,92 +117,96 @@ Cross-platform Node.js scripts executed automatically by Qwen Code at specific t
 
 ## Detailed Component Inventory
 
-### 1. Agents (30)
+### 1. Agents (30 Specialist Sub-Agents)
 
-| Category                 | Agent                    | Primary Role                                                             |
-| :----------------------- | :----------------------- | :----------------------------------------------------------------------- |
-| **Management**           | `context-builder`        | Assembles concise context handoff packages for sub-agents                |
-|                          | `fullstack-orchestrator` | Orchestrates end-to-end full-stack feature delivery                      |
-|                          | `memory-curator`         | Manages long-term agent memory, prunes stale entries                     |
-|                          | `humanizer`              | Rewrites AI text into natural, professional, human prose                 |
-|                          | `team-commander`         | Coordinates multi-agent team tasks and resolves blockers                 |
-| **Engineering**          | `database-architect`     | Designs normalized relational/NoSQL schemas, ERDs, and migrations        |
-|                          | `backend-engineer`       | Implements server logic, REST/GraphQL APIs, and middleware               |
-|                          | `frontend-engineer`      | Constructs responsive React/Next.js interfaces with Tailwind             |
-|                          | `mobile-developer`       | Builds cross-platform React Native / Expo mobile applications            |
-|                          | `ui-ux-designer`         | Creates design tokens, component specifications, and wireframes          |
-|                          | `code-reviewer`          | Conducts thorough code quality reviews and anti-pattern detection        |
-|                          | `refactor-engineer`      | Refactors legacy code, resolves technical debt, optimizes performance    |
-|                          | `technical-writer`       | Generates comprehensive API references, READMEs, and ADRs                |
-| **Infrastructure**       | `cloud-architect`        | Designs IaC (Terraform/Pulumi) for AWS/GCP/Azure environments            |
-|                          | `devops-engineer`        | Configures CI/CD pipelines, Docker containers, and K8s manifests         |
-|                          | `network-engineer`       | Handles DNS resolution, port diagnostics, and network troubleshooting    |
-|                          | `execution-engineer`     | Automates background task execution, cron schedules, and workflows       |
-| **Security**             | `cybersecurity-analyst`  | Conducts OWASP security audits, vulnerability scans, and threat models   |
-|                          | `quality-gatekeeper`     | Enforces verification standards and output quality contracts             |
-|                          | `risk-manager`           | Monitors portfolio exposure, position sizing, and circuit breakers       |
-| **Data & Research**      | `data-engineer`          | Builds robust ETL/ELT pipelines, data warehouses, and validation         |
-|                          | `market-data-engineer`   | Processes real-time market feeds, OHLCV data, and WebSocket streams      |
-|                          | `web-researcher`         | Performs deep multi-source web research with fact-verification           |
-|                          | `news-trending-scout`    | Monitors real-time news trends, sentiment, and social signals            |
-|                          | `social-media-analyst`   | Tracks engagement metrics, platform trends, and brand sentiment          |
-| **Quantitative Finance** | `finance-analyst`        | Constructs DCF models, financial ratios, and risk metrics                |
-|                          | `quant-algo-engineer`    | Implements quantitative trading algorithms and backtest logic            |
-|                          | `quant-strategist`       | Researches alpha signals, mean-reversion, and trend-following strategies |
-|                          | `trading-desk-chief`     | Oversees trading operations, compliance, and risk limits                 |
-| **Specialized**          | `self-evaluator`         | Conducts objective self-evaluations against prompt criteria              |
-
----
-
-### 2. Technical Skills (42)
-
-| Domain                   | Skill                           | Description                                                         |
-| :----------------------- | :------------------------------ | :------------------------------------------------------------------ |
-| **AI Core**              | `ai-humanizer-anti-slop`        | Anti-slop guidelines and prose naturalization                       |
-|                          | `ai-memory-curator`             | Memory curation, deduplication, and indexing                        |
-|                          | `prompt-router`                 | Intent classification and skill-to-agent mapping                    |
-|                          | `fact-check-anti-hallucination` | Cross-verification protocol preventing ungrounded claims            |
-| **Software Engineering** | `backend-api-design`            | RESTful/GraphQL API design with OpenAPI specifications              |
-|                          | `database-ssd-design`           | Schema State Diagrams and entity lifecycle modeling                 |
-|                          | `frontend-react-tailwind`       | React component construction with Tailwind CSS                      |
-|                          | `ui-animation-gsap-framer`      | GSAP and Framer Motion animation implementations                    |
-|                          | `ui-ux-design-system`           | Design system generation (tokens, scales, wireframes)               |
-|                          | `api-doc-generator`             | Automatic API documentation extraction from codebase                |
-|                          | `api-testing`                   | Contract testing, load testing, and integration suites              |
-|                          | `mobile-react-native`           | React Native / Expo application development patterns                |
-|                          | `migration-refactoring`         | Legacy migration strategies and framework upgrades                  |
-|                          | `tdd-workflow`                  | Test-Driven Development (Red-Green-Refactor) loop                   |
-|                          | `verification-loop`             | Continuous linting, type-checking, and test execution               |
-| **Security**             | `cybersecurity-pentest`         | Penetration testing methodology based on OWASP Top 10               |
-|                          | `cybersecurity-vuln-scan`       | Automated vulnerability scanning (`npm audit`, `bandit`, `semgrep`) |
-|                          | `code-review-security`          | Static analysis for injection, XSS, SSRF, and credential leaks      |
-| **DevOps & Cloud**       | `docker-deployment`             | Containerization, multi-stage Dockerfiles, compose setups           |
-|                          | `git-workflow`                  | Advanced Git branching, rebasing, and merge strategies              |
-|                          | `github-workflow`               | GitHub operations (PRs, issues, Actions) via MCP                    |
-|                          | `network-diagnostics`           | DNS, connectivity, latency, and port troubleshooting                |
-|                          | `monitoring-observability`      | Prometheus, Grafana, Datadog setup and log tracing                  |
-|                          | `performance-optimization`      | Profiling bundle sizes, memory leaks, and query performance         |
-| **Data & Research**      | `data-visualization`            | Interactive charts using D3.js, Recharts, and Plotly                |
-|                          | `etl-pipeline`                  | Idempotent ETL pipeline construction and data quality checks        |
-|                          | `web-research-deep`             | Multi-source deep research pipeline with citation scoring           |
-|                          | `news-trending-aggregator`      | Real-time news aggregation and sentiment clustering                 |
-|                          | `api-integration-exa-tavily`    | Unified search API integration patterns (Tavily/Exa/Brave)          |
-|                          | `social-media-monitor`          | Social media metric tracking and sentiment analysis                 |
-| **Quantitative Finance** | `finance-analysis`              | DCF valuation, portfolio optimization, VaR calculation              |
-|                          | `quant-algo-trading`            | Quantitative strategy backtesting with Backtrader/VectorBT          |
-| **System Workflows**     | `fullstack-orchestration`       | End-to-end full-stack application orchestration                     |
-|                          | `workflow-automation`           | Multi-agent conditional execution chains                            |
-|                          | `universal-execution-loop`      | Universal build-run-test-fix verification loop                      |
-|                          | `error-resolution-loop`         | Systematic root-cause analysis and automated debugging              |
-|                          | `accessibility-audit`           | WCAG 2.1 AA/AAA compliance checking and keyboard nav                |
-|                          | `seo-optimization`              | Technical SEO, structured data, and Core Web Vitals                 |
-|                          | `technical-documentation`       | Comprehensive technical doc generation                              |
-|                          | `cloud-infrastructure`          | Infrastructure as Code (IaC) generation                             |
-|                          | `strategic-compact`             | Context window compression protocols                                |
+| Category                   | Agent                    | Primary Role                                                             |
+| :------------------------- | :----------------------- | :----------------------------------------------------------------------- |
+| **Management & Quality**   | `context-builder`        | Assembles concise context handoff packages for sub-agents                |
+|                            | `fullstack-orchestrator` | Orchestrates end-to-end full-stack feature delivery                      |
+|                            | `memory-curator`         | Manages long-term agent memory, prunes stale entries                     |
+|                            | `humanizer`              | Rewrites AI text into natural, professional, human prose                 |
+|                            | `team-commander`         | Coordinates multi-agent team tasks and resolves blockers                 |
+|                            | `self-evaluator`         | Conducts objective self-evaluations against prompt criteria              |
+|                            | `quality-gatekeeper`     | Enforces verification standards and output quality contracts             |
+| **Software Engineering**   | `database-architect`     | Designs normalized relational/NoSQL schemas, ERDs, and migrations        |
+|                            | `backend-engineer`       | Implements server logic, REST/GraphQL APIs, and middleware               |
+|                            | `frontend-engineer`      | Constructs responsive React/Next.js interfaces with Tailwind             |
+|                            | `mobile-developer`       | Builds cross-platform React Native / Expo mobile applications            |
+|                            | `ui-ux-designer`         | Creates design tokens, component specifications, and wireframes          |
+|                            | `code-reviewer`          | Conducts thorough code quality reviews and anti-pattern detection        |
+|                            | `refactor-engineer`      | Refactors legacy code, resolves technical debt, optimizes performance    |
+|                            | `technical-writer`       | Generates comprehensive API references, READMEs, and ADRs                |
+| **Infrastructure & Cloud** | `cloud-architect`        | Designs IaC (Terraform/Pulumi) for AWS/GCP/Azure environments            |
+|                            | `devops-engineer`        | Configures CI/CD pipelines, Docker containers, and K8s manifests         |
+|                            | `network-engineer`       | Handles DNS resolution, port diagnostics, and network troubleshooting    |
+|                            | `execution-engineer`     | Automates background task execution, cron schedules, and workflows       |
+| **Security & Auditing**    | `cybersecurity-analyst`  | Conducts OWASP security audits, vulnerability scans, and threat models   |
+|                            | `risk-manager`           | Monitors portfolio exposure, position sizing, and circuit breakers       |
+| **Data & Research**        | `data-engineer`          | Builds robust ETL/ELT pipelines, data warehouses, and validation         |
+|                            | `market-data-engineer`   | Processes real-time market feeds, OHLCV data, and WebSocket streams      |
+|                            | `web-researcher`         | Performs deep multi-source web research with fact-verification           |
+|                            | `news-trending-scout`    | Monitors real-time news trends, sentiment, and social signals            |
+|                            | `social-media-analyst`   | Tracks engagement metrics, platform trends, and brand sentiment          |
+| **Quantitative Finance**   | `finance-analyst`        | Constructs DCF models, financial ratios, and risk metrics                |
+|                            | `quant-algo-engineer`    | Implements quantitative trading algorithms and backtest logic            |
+|                            | `quant-strategist`       | Researches alpha signals, mean-reversion, and trend-following strategies |
+|                            | `trading-desk-chief`     | Oversees trading operations, compliance, and risk limits                 |
 
 ---
 
-### 3. Slash Commands (15)
+### 2. Technical Skills (45 Skills)
+
+| Domain                     | Skill                           | Description                                                         |
+| :------------------------- | :------------------------------ | :------------------------------------------------------------------ |
+| **AI Core & Routing**      | `ai-humanizer-anti-slop`        | Anti-slop guidelines and prose naturalization                       |
+|                            | `ai-memory-curator`             | Memory curation, deduplication, and indexing                        |
+|                            | `prompt-router`                 | Intent classification and skill-to-agent mapping                    |
+|                            | `fact-check-anti-hallucination` | Cross-verification protocol preventing ungrounded claims            |
+|                            | `strategic-compact`             | Context window compression protocols                                |
+| **Frontend & UI/UX**       | `frontend-react-tailwind`       | React component construction with Tailwind CSS                      |
+|                            | `ui-animation-gsap-framer`      | GSAP and Framer Motion animation implementations                    |
+|                            | `ui-ux-design-system`           | Design system generation (tokens, scales, wireframes)               |
+|                            | `ui-ux-pro-max`                 | Advanced visual design hierarchy and component layout               |
+|                            | `accessibility-audit`           | WCAG 2.1 AA/AAA compliance checking and keyboard navigation         |
+| **Backend & Architecture** | `backend-api-design`            | RESTful/GraphQL API design with OpenAPI specifications              |
+|                            | `database-ssd-design`           | Schema State Diagrams and entity lifecycle modeling                 |
+|                            | `api-doc-generator`             | Automatic API documentation extraction from codebase                |
+|                            | `api-testing`                   | Contract testing, load testing, and integration suites              |
+|                            | `mobile-react-native`           | React Native / Expo application development patterns                |
+|                            | `migration-refactoring`         | Legacy migration strategies and framework upgrades                  |
+|                            | `tdd-workflow`                  | Test-Driven Development (Red-Green-Refactor) loop                   |
+|                            | `verification-loop`             | Continuous linting, type-checking, and test execution               |
+|                            | `performance-optimization`      | Profiling bundle sizes, memory leaks, and query performance         |
+| **Security & Testing**     | `cybersecurity-pentest`         | Penetration testing methodology based on OWASP Top 10               |
+|                            | `cybersecurity-vuln-scan`       | Automated vulnerability scanning (`npm audit`, `bandit`, `semgrep`) |
+|                            | `code-review-security`          | Static analysis for injection, XSS, SSRF, and credential leaks      |
+| **DevOps & Cloud**         | `cloud-infrastructure`          | Infrastructure as Code (Terraform/Pulumi) generation                |
+|                            | `docker-deployment`             | Containerization, multi-stage Dockerfiles, compose setups           |
+|                            | `git-workflow`                  | Advanced Git branching, rebasing, and merge strategies              |
+|                            | `github-workflow`               | GitHub operations (PRs, issues, Actions) via MCP                    |
+|                            | `network-diagnostics`           | DNS, connectivity, latency, and port troubleshooting                |
+|                            | `monitoring-observability`      | Prometheus, Grafana, Datadog setup and log tracing                  |
+| **Data & Research**        | `data-visualization`            | Interactive charts using D3.js, Recharts, and Plotly                |
+|                            | `etl-pipeline`                  | Idempotent ETL pipeline construction and data quality checks        |
+|                            | `web-research-deep`             | Multi-source deep research pipeline with citation scoring           |
+|                            | `news-trending-aggregator`      | Real-time news aggregation and sentiment clustering                 |
+|                            | `api-integration-exa-tavily`    | Unified search API integration patterns (Tavily/Exa/Brave)          |
+|                            | `social-media-monitor`          | Social media metric tracking and sentiment analysis                 |
+|                            | `pdf-extraction`                | High-fidelity text and table extraction from PDF files              |
+| **Quantitative Finance**   | `finance-analysis`              | DCF valuation, portfolio optimization, VaR calculation              |
+|                            | `quant-algo-trading`            | Quantitative strategy backtesting with Backtrader/VectorBT          |
+|                            | `derivatives-pricing`           | Black-Scholes options pricing, Greeks, and Monte Carlo models       |
+|                            | `institutional-econometrics`    | Advanced financial math, risk metrics, and time-series econometrics |
+| **System Workflows**       | `fullstack-orchestration`       | End-to-end full-stack application orchestration                     |
+|                            | `workflow-automation`           | Multi-agent conditional execution chains                            |
+|                            | `universal-execution-loop`      | Universal build-run-test-fix verification loop                      |
+|                            | `error-resolution-loop`         | Systematic root-cause analysis and automated debugging              |
+|                            | `seo-optimization`              | Technical SEO, structured data, and Core Web Vitals                 |
+|                            | `technical-documentation`       | Comprehensive technical documentation generation                    |
+
+---
+
+### 3. Slash Commands (15 Commands)
 
 | Command       | Target Workflow / Action                                             |
 | :------------ | :------------------------------------------------------------------- |
@@ -224,33 +228,34 @@ Cross-platform Node.js scripts executed automatically by Qwen Code at specific t
 
 ---
 
-### 4. Lifecycle Hooks (17)
+### 4. Lifecycle Hooks (18 Scripts)
 
-| Script                   | Qwen Code Lifecycle Event          | Purpose                                                           |
-| :----------------------- | :--------------------------------- | :---------------------------------------------------------------- |
-| `session-bootstrap.js`   | `SessionStart`                     | Prepares workspace environment and state                          |
-| `auto-resume-watcher.js` | `SessionStart`                     | Monitors background execution and auto-resumes stalled tasks      |
-| `context-pruner.js`      | `UserPromptSubmit`                 | Prunes stale context before prompt execution                      |
-| `prompt-router.js`       | `UserPromptSubmit`                 | Analyzes prompt complexity and injects routing directives         |
-| `security-check.js`      | `PreToolUse` (`run_shell_command`) | Blocks destructive system commands (`rm -rf`, `git push --force`) |
-| `trading-risk-guard.js`  | `PreToolUse` (`run_shell_command`) | Validates trade execution limits and risk boundaries              |
-| `token-monitor.js`       | `PostToolUse` (`*`)                | Tracks turn-by-turn token consumption                             |
-| `lint-check.js`          | `PostToolUse` (`write_file`)       | Runs linter checks following code changes                         |
-| `auto-format.js`         | `PostToolUse` (`write_file`)       | Formats modified code to project standards                        |
-| `parent-silencer.js`     | `MessageDisplay`                   | Filters parent task chatter during sub-agent execution            |
-| `output-sanitizer.js`    | `MessageDisplay`                   | Cleans raw tool artifacts from user-facing output                 |
-| `subagent-presenter.js`  | `SubagentStart`                    | Standardizes sub-agent result formatting                          |
-| `hallucination-guard.js` | `Stop`                             | Detects and flags ungrounded claims or invalid links              |
-| `quality-gate.js`        | `Stop`                             | Enforces anti-slop rules and triggers humanized rewrites          |
-| `auto-memory.js`         | `Stop`                             | Persists key learnings and decisions to long-term memory          |
-| `improvement-tracker.js` | `Stop`                             | Logs continuous system improvements over time                     |
-| `protocol-updater.js`    | `Stop`                             | Synchronizes protocol documentation with codebase changes         |
-| `reflection.js`          | `Stop`                             | Generates self-reflections on session performance                 |
-| `memory-distiller.py`    | `PreCompact`                       | Distills conversation history before token compaction             |
+| Script                   | Qwen Code Lifecycle Event | Matcher Target      | Timeout | Primary Function                                                    |
+| :----------------------- | :------------------------ | :------------------ | :-----: | :------------------------------------------------------------------ |
+| `session-bootstrap.js`   | `SessionStart`            | All                 | 10000ms | Initializes session environment & environment variables             |
+| `auto-resume-watcher.js` | `SessionStart`            | All                 | 10000ms | Monitors background stalls and injects auto-resume prompts          |
+| `context-pruner.js`      | `UserPromptSubmit`        | All                 | 5000ms  | Prunes context tokens before prompt execution                       |
+| `prompt-router.js`       | `UserPromptSubmit`        | All                 | 15000ms | Analyzes prompt complexity and injects routing directives           |
+| `security-check.js`      | `PreToolUse`              | `run_shell_command` | 5000ms  | Blocks destructive terminal commands (`rm -rf`, `git push --force`) |
+| `trading-risk-guard.js`  | `PreToolUse`              | `run_shell_command` | 5000ms  | Enforces trading limits and position risk controls                  |
+| `quant-math-guard.js`    | `PreToolUse`              | `run_shell_command` | 5000ms  | Validates quantitative calculations and econometric formulas        |
+| `token-monitor.js`       | `PostToolUse`             | `*`                 | 5000ms  | Tracks turn-by-turn token consumption                               |
+| `lint-check.js`          | `PostToolUse`             | `write_file`        | 5000ms  | Runs linter checks after file modifications                         |
+| `auto-format.js`         | `PostToolUse`             | `write_file`        | 5000ms  | Auto-formats edited files to project style                          |
+| `parent-silencer.js`     | `MessageDisplay`          | All                 | 5000ms  | Filters parent conversation noise during sub-agent runs             |
+| `output-sanitizer.js`    | `MessageDisplay`          | All                 | 5000ms  | Cleans raw MCP/tool JSON dumps from output                          |
+| `subagent-presenter.js`  | `SubagentStart`           | All                 | 5000ms  | Formats sub-agent start/progress notifications                      |
+| `hallucination-guard.js` | `Stop`                    | All                 | 5000ms  | Flags ungrounded claims, non-existent URLs, or code bugs            |
+| `quality-gate.js`        | `Stop`                    | All                 | 10000ms | Rejects robotic AI slop phrasing and forces humanization            |
+| `auto-memory.js`         | `Stop`                    | All                 | 10000ms | Persists key learnings to long-term memory                          |
+| `improvement-tracker.js` | `Stop`                    | All                 | 10000ms | Logs continuous system improvements                                 |
+| `protocol-updater.js`    | `Stop`                    | All                 |    —    | Syncs protocol documentation with codebase updates                  |
+| `reflection.js`          | `Stop`                    | All                 | 10000ms | Conducts end-of-turn session reflection                             |
+| `memory-distiller.py`    | `PreCompact`              | All                 | 15000ms | Distills context into structured memory before compaction           |
 
 ---
 
-### 5. Enforced System Rules (13)
+### 5. Enforced System Rules (13 Rules)
 
 - **Universal Rules (`rules/_universal/`)**:
   - `chain-of-thought.md`: Requires structured reasoning before substantive output.
@@ -270,36 +275,22 @@ Cross-platform Node.js scripts executed automatically by Qwen Code at specific t
 
 ---
 
-### 6. Model Context Protocol (MCP) Integrations (15)
+### 6. Model Context Protocol (MCP) Integrations (15 Servers)
 
-| MCP Server            | Connection                                                     | Capabilities                                                 |
-| :-------------------- | :------------------------------------------------------------- | :----------------------------------------------------------- |
-| `tavily`              | stdio (`npx tavily-mcp`)                                       | Real-time web search and news optimized for AI               |
-| `exa`                 | stdio (`npx exa-mcp-server`)                                   | Semantic code, academic research, and deep content search    |
-| `brave-search`        | stdio (`npx @modelcontextprotocol/server-brave-search`)        | Privacy-focused web search with local business data          |
-| `web-research`        | stdio (`npx @mzxrai/mcp-webresearch`)                          | Multi-page automated web research via headless browser       |
-| `github`              | stdio (`npx @modelcontextprotocol/server-github`)              | GitHub repository, PR, issue, and workflow management        |
-| `filesystem`          | stdio (`npx @modelcontextprotocol/server-filesystem`)          | Secure local workspace file read/write operations            |
-| `fetch`               | stdio (`npx @kazuph/mcp-fetch`)                                | Direct URL content retrieval and Jina AI web scraping        |
-| `memory`              | stdio (`npx @modelcontextprotocol/server-memory`)              | Knowledge graph server for long-term entity-relation storage |
-| `sequential-thinking` | stdio (`npx @modelcontextprotocol/server-sequential-thinking`) | Dynamic problem decomposition and multi-step reasoning       |
-| `playwright`          | stdio (`npx @playwright/mcp`)                                  | Headless browser automation, visual snapshots, E2E testing   |
-| `context7`            | stdio (`npx @upstash/context7-mcp`)                            | Live documentation lookup for npm/PyPI packages              |
-| `magic`               | stdio (`npx @magicuidesign/mcp`)                               | Magic UI design token and component library access           |
-| `vercel`              | HTTP (`https://mcp.vercel.com`)                                | Vercel deployment management and project integration         |
-| `firecrawl`           | stdio (`npx firecrawl-mcp`)                                    | High-fidelity web scraping and page crawling                 |
-| `Parallel Search MCP` | Remote HTTP (`https://search.parallel.ai/mcp`)                 | Multi-engine parallel search integration                     |
-
----
-
-## Overall System Metrics
-
-| Category                     | Component Count |
-| :--------------------------- | :-------------: |
-| **Specialized Agents**       |     **30**      |
-| **Technical Skills**         |     **42**      |
-| **Slash Commands**           |     **15**      |
-| **Lifecycle Hooks**          |     **17**      |
-| **Enforced Rules**           |     **13**      |
-| **MCP Integrations**         |     **15**      |
-| **Total Modular Components** |     **132**     |
+| MCP Server            | Transport / Runtime                                            | Primary Capabilities                                            |
+| :-------------------- | :------------------------------------------------------------- | :-------------------------------------------------------------- |
+| `tavily`              | stdio (`npx tavily-mcp`)                                       | Real-time web search and news optimized for AI models           |
+| `exa`                 | stdio (`npx exa-mcp-server`)                                   | Semantic code, academic research, and deep content search       |
+| `brave-search`        | stdio (`npx @modelcontextprotocol/server-brave-search`)        | Privacy-focused web search with local business data             |
+| `web-research`        | stdio (`npx @mzxrai/mcp-webresearch`)                          | Multi-page automated web research via headless browser          |
+| `github`              | stdio (`npx @modelcontextprotocol/server-github`)              | GitHub repository, PR, issue, and workflow management           |
+| `filesystem`          | stdio (`npx @modelcontextprotocol/server-filesystem`)          | Secure local file system operations                             |
+| `fetch`               | stdio (`npx @kazuph/mcp-fetch`)                                | Web page extraction and markdown parsing with Jina proxy        |
+| `memory`              | stdio (`npx @modelcontextprotocol/server-memory`)              | Local knowledge graph persistence for entities & relations      |
+| `sequential-thinking` | stdio (`npx @modelcontextprotocol/server-sequential-thinking`) | Dynamic multi-step reasoning and hypothesis testing             |
+| `playwright`          | stdio (`npx @playwright/mcp`)                                  | Headless browser automation, visual snapshots, E2E testing      |
+| `context7`            | stdio (`npx @upstash/context7-mcp`)                            | Up-to-date documentation lookup for modern frameworks/libraries |
+| `magic`               | stdio (`npx @magicuidesign/mcp`)                               | Magic UI animation components and visual blocks                 |
+| `vercel`              | HTTP (`https://mcp.vercel.com`)                                | Cloud deployments and project infrastructure management         |
+| `firecrawl`           | stdio (`npx firecrawl-mcp`)                                    | Advanced web scraping, recursive crawling, and document parsing |
+| `Parallel Search MCP` | stdio (`npx mcp-remote https://search.parallel.ai/mcp`)        | High-speed parallel search with focused snippet extraction      |

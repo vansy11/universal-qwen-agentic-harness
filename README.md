@@ -17,7 +17,7 @@
 
 ## Executive Summary
 
-The **Universal Qwen Agentic Harness** transforms the Qwen Code CLI into an autonomous, enterprise-grade software engineering system. Instead of relying on a single context window to write, test, and review its own code, this harness provides an **Orchestrator-Worker** architecture powered by 17 native lifecycle hooks, 30 specialist agents, 42 technical skills, 15 slash commands, 13 enforced rule sets, and 15 Model Context Protocol (MCP) integrations.
+The **Universal Qwen Agentic Harness** transforms the Qwen Code CLI into an autonomous, enterprise-grade software engineering and research environment. Rather than relying on a single context window to write, test, and review code, this harness provides an **Orchestrator-Worker** architecture powered by 18 native lifecycle hooks, 30 specialist sub-agents, 45 technical skills, 15 slash commands, 13 enforced rule sets, and 15 Model Context Protocol (MCP) integrations.
 
 ```
 User Prompt ──► Prompt Router ──► Orchestration ──► Specialist Agents ──► Security Check ──► Quality Gate ──► Humanized Output
@@ -30,10 +30,10 @@ User Prompt ──► Prompt Router ──► Orchestration ──► Specialist
 | Component             | Count  | Functionality                                                                                                   |
 | :-------------------- | :----: | :-------------------------------------------------------------------------------------------------------------- |
 | **Specialist Agents** | **30** | Domain experts across Management, Frontend, Backend, Database, Cloud, Security, Data, and Quantitative Finance  |
-| **Technical Skills**  | **42** | Production guidelines and workflows for full-stack, security, DevOps, data pipelines, and quantitative trading  |
+| **Technical Skills**  | **45** | Production guidelines and workflows for full-stack, security, DevOps, data pipelines, and quantitative trading  |
 | **Slash Commands**    | **15** | Direct triggers for instant agent delegation (`/fullstack`, `/review`, `/research`, `/quant`, `/pentest`, etc.) |
-| **Lifecycle Hooks**   | **17** | Cross-platform Node.js & Python scripts enforcing security, token efficiency, quality gates, and auto-memory    |
-| **Enforced Rules**    | **13** | Strict coding, security baseline, output formatting, and verification protocols                                 |
+| **Lifecycle Hooks**   | **18** | Cross-platform Node.js & Python scripts enforcing security, token efficiency, quality gates, and auto-memory    |
+| **Enforced Rules**    | **13** | Strict coding standards, security baselines, output formatting, and verification protocols                      |
 | **MCP Integrations**  | **15** | Integrations for real-time web search, GitHub, filesystem, browser testing, live library docs, and memory       |
 
 ---
@@ -62,10 +62,11 @@ Integrates multi-layered verification:
 - **Scheduled Loops (`/loop` & `loop_wakeup`)**: Runs tasks on fixed schedules or background wakeups up to 24 hours.
 - **Auto-Resume Watcher (`core/auto-resume-watcher.js`)**: Monitors background task stalls and API rate limits. Automatically waits out cooldown periods and injects recovery prompts (`[SYSTEM AUTO-RESUME]`) until quality gates pass.
 
-### 5. Security & Risk Firewall
+### 5. Multi-Layer Security & Risk Firewall
 
 - **Command Security (`security-check.js`)**: Blocks dangerous terminal execution (`rm -rf /`, `git push --force`, `curl | sh`).
 - **Trading Risk Guard (`trading-risk-guard.js`)**: Validates financial algorithm parameters, enforcing position sizing limits and circuit breakers.
+- **Math Guard (`quant-math-guard.js`)**: Ensures mathematical rigor in quantitative calculations.
 
 ### 6. Persistent Long-Term Memory
 
@@ -87,7 +88,7 @@ cd universal-qwen-agentic-harness
 ### 2. Install MCP Server Dependencies
 
 ```bash
-npm install -g @modelcontextprotocol/server-github @modelcontextprotocol/server-filesystem @modelcontextprotocol/server-memory @modelcontextprotocol/server-sequential-thinking @kazuph/mcp-fetch tavily-mcp exa-mcp-server
+npm install -g @modelcontextprotocol/server-github @modelcontextprotocol/server-filesystem @modelcontextprotocol/server-memory @modelcontextprotocol/server-sequential-thinking @kazuph/mcp-fetch tavily-mcp exa-mcp-server @upstash/context7-mcp @magicuidesign/mcp @playwright/mcp firecrawl-mcp @modelcontextprotocol/server-brave-search
 ```
 
 ### 3. Configure API Keys
@@ -101,7 +102,8 @@ Copy `settings.example.json` to `.qwen/settings.json` and configure your API key
     "TAVILY_API_KEY": "your-tavily-key",
     "GITHUB_TOKEN": "your-github-token",
     "EXA_API_KEY": "your-exa-key",
-    "GEMINI_API_KEY": "your-gemini-key"
+    "GEMINI_API_KEY": "your-gemini-key",
+    "FIRECRAWL_API_KEY": "your-firecrawl-key"
   }
 }
 ```
@@ -145,7 +147,7 @@ The harness natively supports switching between DashScope (Alibaba), OpenAI, Goo
 ```json
 {
   "model": {
-    "name": "gemini-3.6-flash",
+    "name": "gemini-3.7-flash",
     "baseUrl": "https://generativelanguage.googleapis.com"
   },
   "modelProviders": {

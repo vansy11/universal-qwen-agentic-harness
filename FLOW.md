@@ -16,9 +16,9 @@ sequenceDiagram
     participant MainAI as Main Qwen CLI
     participant ContextBuilder as Context Builder Agent<br/>(context-builder.md)
     participant Orchestrator as Fullstack Orchestrator<br/>(fullstack-orchestrator.md)
-    participant SubAgent as Specialist Agents<br/>(Frontend/Backend/DB/Cloud)
-    participant PreHook as PreToolUse Hooks<br/>(security-check & risk-guard)
-    participant Tool as Tools & MCP Servers<br/>(Filesystem/GitHub/Tavily/Playwright)
+    participant SubAgent as Specialist Agents (30)<br/>(Frontend/Backend/DB/Cloud/Quant)
+    participant PreHook as PreToolUse Hooks<br/>(security-check / risk-guard / math-guard)
+    participant Tool as Tools & MCP Servers (15)<br/>(Filesystem/GitHub/Tavily/Playwright)
     participant PostHook as PostToolUse Hooks<br/>(token-monitor / lint / format)
     participant StopHook as Stop Hooks<br/>(quality-gate / auto-memory / reflection)
     participant Humanizer as Humanizer Agent<br/>(humanizer.md)
@@ -42,7 +42,7 @@ sequenceDiagram
         loop Parallel / Sequential Execution
             SubAgent->>PreHook: Propose tool execution (e.g. run_shell_command, write_file)
             alt Dangerous Command or Unsafe Risk
-                PreHook-->>SubAgent: Block execution with security error
+                PreHook-->>SubAgent: Block execution with security / risk error
             else Authorized Command
                 PreHook-->>Tool: Allow tool execution
                 Tool-->>PostHook: Tool result returned
@@ -54,7 +54,7 @@ sequenceDiagram
         SubAgent-->>Orchestrator: Specialist tasks completed
         Orchestrator-->>StopHook: Draft final response payload
 
-        StopHook->>StopHook: Evaluate response with quality-gate.js
+        StopHook->>StopHook: Evaluate response with quality-gate.js & hallucination-guard.js
         alt AI Slop or Robotic Text Detected
             StopHook->>Humanizer: Reject & invoke Humanizer Agent
             Humanizer-->>StopHook: Re-written natural human prose
@@ -85,21 +85,23 @@ sequenceDiagram
 
 1. **Context Building (`agents/context-builder.md`)**: Analyzes current directory files, Git state, and active requirements. Generates a concise `< 500 word` summary and exports a structured JSON handoff (`handoff-schema.json`).
 2. **Prompt Optimization (`core/prompt-optimizer.js`)**: Strips fluff and politeness phrases, injects active coding rules (`rules/_universal/`), attaches relevant long-term memories (`.qwen/memories/`), and calculates strict token budgets.
-3. **Task Delegation**: The `fullstack-orchestrator` spawns background sub-agents (`database-architect`, `backend-engineer`, `frontend-engineer`, `cloud-architect`) via `agent` tool calls.
+3. **Task Delegation**: The `fullstack-orchestrator` spawns background sub-agents (`database-architect`, `backend-engineer`, `frontend-engineer`, `cloud-architect`, etc.) via `agent` tool calls.
 
 ### Phase 4: Specialist Execution, Skills, & MCPs
 
-1. **Skill Directives**: Sub-agents load specialized rules from `.qwen/skills/` (e.g., `frontend-react-tailwind`, `backend-api-design`, `cybersecurity-pentest`).
+1. **Skill Directives**: Sub-agents load specialized rules from `.qwen/skills/` (45 available skills across Frontend, Backend, DevOps, Security, Data, and Quantitative Finance).
 2. **MCP Tool Operations**:
-   - External Research: `web-researcher` calls **Tavily**, **Exa**, or **Brave Search** MCP.
-   - File & Code I/O: `backend-engineer` calls **Filesystem** or **GitHub** MCP.
-   - Browser & E2E Testing: `quality-gatekeeper` calls **Playwright** MCP for visual snapshots and DOM evaluation.
-   - Library Documentation: Agents query **Context7 MCP** for live package API specs.
+   - **External Research**: `web-researcher` queries **Tavily**, **Exa**, **Brave Search**, **Firecrawl**, or **Parallel Search MCP**.
+   - **File & Code I/O**: `backend-engineer` executes operations via **Filesystem** or **GitHub** MCP.
+   - **Browser & E2E Testing**: `quality-gatekeeper` calls **Playwright** MCP for visual snapshots and DOM evaluation.
+   - **Library Documentation**: Agents query **Context7 MCP** for live package API specifications.
+   - **UI & Animations**: `frontend-engineer` inspects and imports **Magic UI** components.
 
 ### Phase 5: Security & Risk Guarding (`PreToolUse`)
 
 1. **Shell Command Firewall (`security-check.js`)**: Intercepts `run_shell_command` calls. Blocks destructive commands (`rm -rf /`, `git push --force`, `curl | sh`, raw disk formatting).
 2. **Trading & Financial Guard (`trading-risk-guard.js`)**: Intercepts automated financial executions. Enforces position sizing limits, stop-loss checks, and blocks unauthorized live trades without manual confirmation flags.
+3. **Quantitative Math Guard (`quant-math-guard.js`)**: Validates mathematical formulas and models against established econometric standards.
 
 ### Phase 6: Post-Tool Processing (`PostToolUse`)
 
@@ -138,6 +140,7 @@ sequenceDiagram
 | `prompt-router.js`       | `UserPromptSubmit`   | All                 | 15000ms | Analyzes prompt complexity and injects routing directives  |
 | `security-check.js`      | `PreToolUse`         | `run_shell_command` | 5000ms  | Blocks destructive terminal commands                       |
 | `trading-risk-guard.js`  | `PreToolUse`         | `run_shell_command` | 5000ms  | Enforces trading limits and position risk controls         |
+| `quant-math-guard.js`    | `PreToolUse`         | `run_shell_command` | 5000ms  | Validates quantitative formulas and econometric bounds     |
 | `token-monitor.js`       | `PostToolUse`        | `*`                 | 5000ms  | Measures token consumption on every turn                   |
 | `lint-check.js`          | `PostToolUse`        | `write_file`        | 5000ms  | Runs linter checks after file modifications                |
 | `auto-format.js`         | `PostToolUse`        | `write_file`        | 5000ms  | Auto-formats edited files to project style                 |
@@ -156,26 +159,26 @@ sequenceDiagram
 
 ## Agent Delegation Matrix
 
-| Primary Agent / Command  | Delegated Sub-Agents                                                                                | Typical Trigger Scenario                          |
-| :----------------------- | :-------------------------------------------------------------------------------------------------- | :------------------------------------------------ |
-| `fullstack-orchestrator` | `database-architect`, `backend-engineer`, `frontend-engineer`, `mobile-developer`, `ui-ux-designer` | Complete full-stack web/mobile application builds |
-| `fullstack-orchestrator` | `cloud-architect`, `devops-engineer`, `network-engineer`                                            | Infrastructure provisioning and CI/CD setup       |
-| `trading-desk-chief`     | `quant-strategist`, `quant-algo-engineer`, `finance-analyst`, `risk-manager`                        | Quantitative strategy design and backtesting      |
-| `team-commander`         | Any specialized sub-agent pool                                                                      | Complex multi-domain engineering tasks            |
-| `context-builder`        | `web-researcher`, `news-trending-scout`                                                             | Context gathering and requirement extraction      |
-| `code-reviewer`          | `cybersecurity-analyst`, `refactor-engineer`                                                        | Automated code review, security, and refactoring  |
+| Primary Agent / Command  | Delegated Sub-Agents                                                                                 | Typical Trigger Scenario                                 |
+| :----------------------- | :--------------------------------------------------------------------------------------------------- | :------------------------------------------------------- |
+| `fullstack-orchestrator` | `database-architect`, `backend-engineer`, `frontend-engineer`, `mobile-developer`, `ui-ux-designer`  | Complete full-stack web/mobile application builds        |
+| `fullstack-orchestrator` | `cloud-architect`, `devops-engineer`, `network-engineer`                                             | Infrastructure provisioning and CI/CD setup              |
+| `trading-desk-chief`     | `quant-strategist`, `quant-algo-engineer`, `finance-analyst`, `risk-manager`, `market-data-engineer` | Quantitative strategy design, backtesting, and execution |
+| `team-commander`         | Any specialized sub-agent pool                                                                       | Complex multi-domain engineering tasks                   |
+| `context-builder`        | `web-researcher`, `news-trending-scout`                                                              | Context gathering and requirement extraction             |
+| `code-reviewer`          | `cybersecurity-analyst`, `refactor-engineer`                                                         | Automated code review, security, and refactoring         |
 
 ---
 
 ## MCP Server Routing Matrix
 
-| Agent Role              | Primary MCP Server | Fallback / Secondary MCP              |
-| :---------------------- | :----------------- | :------------------------------------ |
-| `web-researcher`        | `tavily`           | `exa`, `brave-search`, `web-research` |
-| `quant-strategist`      | `exa`              | `tavily`, `fetch`                     |
-| `backend-engineer`      | `filesystem`       | `github`, `context7`                  |
-| `frontend-engineer`     | `magic`            | `context7`, `playwright`              |
-| `devops-engineer`       | `vercel`           | `filesystem`, `github`                |
-| `cybersecurity-analyst` | `firecrawl`        | `tavily`, `web-research`              |
-| `quality-gatekeeper`    | `playwright`       | `filesystem`                          |
-| `memory-curator`        | `memory`           | `filesystem`                          |
+| Agent Role              | Primary MCP Server | Fallback / Secondary MCP                               |
+| :---------------------- | :----------------- | :----------------------------------------------------- |
+| `web-researcher`        | `brave-search`     | `tavily`, `exa`, `Parallel Search MCP`, `web-research` |
+| `quant-strategist`      | `exa`              | `tavily`, `fetch`, `sequential-thinking`               |
+| `backend-engineer`      | `filesystem`       | `github`, `context7`                                   |
+| `frontend-engineer`     | `magic`            | `context7`, `playwright`                               |
+| `devops-engineer`       | `vercel`           | `filesystem`, `github`                                 |
+| `cybersecurity-analyst` | `firecrawl`        | `tavily`, `web-research`                               |
+| `quality-gatekeeper`    | `playwright`       | `filesystem`                                           |
+| `memory-curator`        | `memory`           | `filesystem`                                           |
