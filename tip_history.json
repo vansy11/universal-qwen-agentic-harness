@@ -1,5 +1,5 @@
 {
-  "sessionCount": 134,
+  "sessionCount": 153,
   "tips": {
     "new-user-slash": {
       "totalShown": 41,
@@ -42,8 +42,8 @@
       "lastSessionTimestamp": 1785856635359
     },
     "insight-command": {
-      "totalShown": 1697,
-      "lastSessionTimestamp": 1787302891144
+      "totalShown": 1894,
+      "lastSessionTimestamp": 1787732299862
     }
   }
 }

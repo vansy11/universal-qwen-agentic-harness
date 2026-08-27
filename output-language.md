@@ -2,18 +2,15 @@
 <!-- qwen-code:llm-output-language: auto -->
 
 ## Rule
-Respond in the same language as the user's input.
+Match the language of the user's input (Indonesian, English, Spanish, or any other language) dynamically and universally.
 
 ## Exception
-If the user **explicitly** requests a response in a specific language (e.g., "please reply in English"), switch to the user's requested language for the remainder of the conversation.
+None. Always mirror the user's conversational language.
 
-## Mixed-language input
-If the user mixes languages, use the language that best matches the user's main request.
+## Code Standards Rule
+Regardless of the conversational output language, **all code across this project must be written in English by default** (variable names, function names, class names, comments, documentation, commit messages, and test descriptions).
 
 ## Keep technical artifacts unchanged
 Do **not** translate or rewrite:
 - Code blocks, CLI commands, file paths, stack traces, logs, JSON keys, identifiers
 - Exact quoted text from the user (keep quotes verbatim)
-
-## Tool / system outputs
-Raw tool/system outputs may contain fixed-format English. Preserve them verbatim, and if needed, add a short explanation in the user's language below.
