@@ -1,0 +1,8 @@
+[
+ {"prompt":"buatkan REST API login dengan JWT","expect":"backend-engineer"},
+ {"prompt":"ringkas tren berita indonesia hari ini","expect":"news-trending-scout"},
+ {"prompt":"desain schema database erd untuk toko","expect":"database-architect"},
+ {"prompt":"buatkan landing page react dengan animasi framer","expect":"frontend-engineer"},
+ {"prompt":"backtest strategi moving average untuk NQ","expect":"quant-strategist"},
+ {"prompt":"https://example.com/artikel ringkas ini","expect":"web-researcher"}
+]

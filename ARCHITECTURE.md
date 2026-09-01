@@ -1,4 +1,4 @@
-﻿# System Architecture
+# System Architecture
 
 The **Universal Qwen Agentic Harness** is an enterprise-grade, event-driven **Orchestrator-Worker** multi-agent platform designed specifically for the Qwen Code CLI. It transforms a single-context LLM coding assistant into a coordinated autonomous engineering suite that plans, delegates, executes, self-evaluates, and persists learnings automatically.
 
@@ -97,7 +97,7 @@ Cross-platform Node.js & Python scripts executed automatically by Qwen Code at s
 
 ### 4. Auto Evaluation & Quality Control
 
-- **System Routing Evaluator (`core/eval-runner.js` / `/eval`)**: Measures prompt routing precision against test datasets (`evals/cases.json`).
+- **System Routing Evaluator (`core/router-eval.js` / `/eval`)**: Measures prompt routing precision against test datasets (`evals/cases.json`).
 - **Self-Evaluator Agent (`agents/self-evaluator.md`)**: Assesses completion criteria, formatting, and verifies that no unresolved placeholders exist before delivering work.
 - **Domain-Agnostic Quality Gate (`hooks/quality-gate.js`)**: Auto-detects the project domain and applies a tailored evaluation strategy. Universal checks (AI-slop, placeholder/TODO remnants, hardcoded secrets) run on every output, then a domain-specific evaluator applies:
   - **web** → Playwright headless runtime evaluation (`core/eval-runner.js`).
@@ -223,7 +223,7 @@ Cross-platform Node.js & Python scripts executed automatically by Qwen Code at s
 | `/backtest`   | Runs strategy backtest suite with walk-forward validation            |
 | `/deploy`     | Generates containerization and staging/production deployment scripts |
 | `/erd`        | Generates Entity-Relationship Diagrams from database schemas         |
-| `/eval`       | Runs routing regression evaluations (`core/eval-runner.js`)          |
+| `/eval`       | Runs routing regression evaluations (`core/router-eval.js`)          |
 | `/fullstack`  | Triggers the complete full-stack development orchestration chain     |
 | `/git-push`   | Stages, commits with conventional message, and pushes changes        |
 | `/humanize`   | Runs anti-slop pass to naturalize AI response text                   |

@@ -2,9 +2,10 @@
 const fs = require('fs');
 const path = require('path');
 
-const MEMORIES_DIR = 'C:/Users/vansy/.qwen/memories';
-const RULES_DIR = 'C:/Users/vansy/.qwen/rules';
-const PROTOCOLS_DIR = 'C:/Users/vansy/.qwen/protocols';
+const QH = path.resolve(__dirname, '..').replace(/\\/g, '/');
+const MEMORIES_DIR = QH + '/memories';
+const RULES_DIR = QH + '/rules';
+const PROTOCOLS_DIR = QH + '/protocols';
 
 function loadFile(fp) {
     try { return fs.readFileSync(fp, 'utf8').trim(); } catch(e) { return ''; }

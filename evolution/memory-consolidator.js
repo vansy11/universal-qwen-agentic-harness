@@ -6,8 +6,9 @@
  */
 const fs = require('fs');
 const path = require('path');
-const MEM_DIR = 'C:/Users/vansy/.qwen/memories';
-const LOG_FILE = 'C:/Users/vansy/.qwen/evolution/improvement-log.jsonl';
+const QH = path.resolve(__dirname, '..').replace(/\\/g, '/');
+const MEM_DIR = QH + '/memories';
+const LOG_FILE = QH + '/evolution/improvement-log.jsonl';
 const PROFILE_FILE = MEM_DIR + '/global-user-profile.md';
 
 // Read all memories recursively

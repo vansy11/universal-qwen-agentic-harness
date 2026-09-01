@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
-const SKILLS_DIR = 'C:/Users/vansy/.qwen/skills';
-const PROJECTS_DIR = 'C:/Users/vansy/.qwen/projects';
-const CACHE_FILE = 'C:/Users/vansy/.qwen/evolution/skill-health-cache.json';
+const QH = path.resolve(__dirname, '..').replace(/\\/g, '/');
+const SKILLS_DIR = QH + '/skills';
+const PROJECTS_DIR = QH + '/projects';
+const CACHE_FILE = QH + '/evolution/skill-health-cache.json';
 const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
 
 // Check if recently run

@@ -1,4 +1,4 @@
-﻿# Universal Qwen Agentic Harness
+# Universal Qwen Agentic Harness
 
 <p align="center">
   <strong>The Enterprise Agent Performance & Orchestration Harness for Qwen Code CLI</strong>
@@ -17,7 +17,7 @@
 
 ## Executive Summary
 
-The **Universal Qwen Agentic Harness** transforms the Qwen Code CLI into an autonomous, enterprise-grade software engineering and research environment. Rather than relying on a single context window to write, test, and review code, this harness provides an **Orchestrator-Worker** architecture powered by 18 native lifecycle hooks, 30 specialist sub-agents, 46 technical skills, 15 slash commands, 15 enforced rule sets, and 15 Model Context Protocol (MCP) integrations.
+The **Universal Qwen Agentic Harness** transforms the Qwen Code CLI into an autonomous, enterprise-grade software engineering and research environment. Rather than relying on a single context window to write, test, and review code, this harness provides an **Orchestrator-Worker** architecture powered by 18 native lifecycle hooks, 30 specialist sub-agents, 46 technical skills (plus optional Bailian ModelStudio skills via bl skill init), 15 slash commands, 15 enforced rule sets, and 15 Model Context Protocol (MCP) integrations.
 
 ```
 User Prompt ──► Prompt Router ──► Orchestration ──► Specialist Agents ──► Security Check ──► Quality Gate ──► Humanized Output
@@ -52,7 +52,7 @@ Uses the `context-builder` agent, `context-pruner.js`, and `prompt-optimizer.js`
 
 Integrates multi-layered, domain-aware verification:
 
-- **System Evaluator (`core/eval-runner.js` / `/eval`)**: Tests routing precision against prompt benchmarks.
+- **System Evaluator (`core/router-eval.js` / `/eval`)**: Tests routing precision against prompt benchmarks.
 - **Self-Evaluator Agent (`agents/self-evaluator.md`)**: Assesses completion criteria before delivery.
 - **Domain-Agnostic Quality Gate (`hooks/quality-gate.js`)**: Auto-detects the project domain and applies a tailored evaluator — **web** (Playwright headless checks), **api** (endpoint/validation review), **python** (anti-pattern detection), **quant** (risk safeguards), **devops** (build/secret checks), or **general** (structure review). Universal checks for AI-slop, leftover placeholders, and hardcoded secrets run on every output. Only FAIL findings block delivery through a proper Stop-hook block decision (WARNs are advisory); clean approvals stay silent.
 
@@ -125,7 +125,7 @@ Force specific agent delegation or execute system workflows instantly:
 | `/backtest`   | Run strategy backtest suite with walk-forward validation                |
 | `/deploy`     | Generate Docker containerization and deployment scripts                 |
 | `/erd`        | Generate Entity-Relationship Diagrams from database schemas             |
-| `/eval`       | Execute routing precision regression evaluation (`core/eval-runner.js`) |
+| `/eval`       | Execute routing precision regression evaluation (`core/router-eval.js`) |
 | `/fullstack`  | Trigger full-stack development (Database → Backend → Frontend → Mobile) |
 | `/git-push`   | Stage, commit with conventional message, and push changes               |
 | `/humanize`   | Rewrite last AI response into natural human prose                       |

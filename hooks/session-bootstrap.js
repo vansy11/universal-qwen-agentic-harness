@@ -20,8 +20,8 @@ try {
   } catch(e) {}
   if (needsRun) {
     const { execSync } = require('child_process');
-    try { execSync('node QWEN_HOME/evolution/route-scorer.js', { timeout: 10000, stdio: 'pipe' }); } catch(e) {}
-    try { execSync('node QWEN_HOME/evolution/memory-consolidator.js', { timeout: 10000, stdio: 'pipe' }); } catch(e) {}
+    try { execSync('node ' + QWEN_HOME + '/evolution/route-scorer.js', { timeout: 10000, stdio: 'pipe' }); } catch(e) {}
+    try { execSync('node ' + QWEN_HOME + '/evolution/memory-consolidator.js', { timeout: 10000, stdio: 'pipe' }); } catch(e) {}
   }
 } catch(e) {}
 

@@ -3,8 +3,9 @@
 import sys, json, os, re
 from datetime import datetime
 
-MEMORY_DIR = "C:/Users/vansy/.qwen/memories"
-SNAPSHOT_DIR = "C:/Users/vansy/.qwen/memories/_snapshots"
+_QH = os.path.dirname(os.path.dirname(os.path.abspath(__file__))).replace("\\", "/")
+MEMORY_DIR = _QH + "/memories"
+SNAPSHOT_DIR = _QH + "/memories/_snapshots"
 
 def distill(transcript_text):
     """Extract key decisions, file changes, and open questions from transcript."""

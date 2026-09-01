@@ -1,33 +1,54 @@
-﻿module.exports = async function (fileContent, filePath) {
-    // 1. Check for Anti-Patterns (Spaghetti Code)
-    const antiPatterns = [
-        { pattern: /var\s+/g, reason: "Use 'let' or 'const' instead of 'var'." },
-        { pattern: /console\.log/g, reason: "Debug logs are not allowed in production code." },
-        { pattern: /:\s*any/g, reason: "Type 'any' is strictly forbidden in TypeScript. Define proper interfaces." },
-        { pattern: /function\s+\w+\s*\([^)]*\)\s*{/g, reason: "Use Arrow Functions () => {} instead of regular function declarations." }
-    ];
+﻿// lint-check.js — PostToolUse (write_file) hook
+// Lightweight static lint on newly written files. Flags TypeScript `any`,
+// debug console statements, and legacy `var`. Emits advisory context only;
+// it never blocks the tool.
 
-    for (const { pattern, reason } of antiPatterns) {
-        if (pattern.test(fileContent)) {
-            return {
-                passed: false,
-                reason: `Clean Code Violation: ${reason}`
-            };
-        }
+let input = "";
+process.stdin.on("data", (c) => (input += c));
+process.stdin.on("end", () => {
+  try {
+    const payload = JSON.parse(input);
+    const filePath = payload.tool_input?.file_path || "";
+    const content =
+      payload.tool_input?.content || payload.tool_input?.new_string || "";
+
+    if (!filePath || !content) {
+      console.log(JSON.stringify({}));
+      return;
     }
 
-    // 2. Run ESLint / Prettier (Mock execution - integrate your actual CLI runner)
-    /*
-    const { execSync } = require('child_process');
-    try {
-        execSync(`npx eslint ${filePath} --fix`, { stdio: 'pipe' });
-    } catch (error) {
-        return {
-            passed: false,
-            reason: `ESLint Errors: ${error.stderr.toString()}`
-        };
-    }
-    */
+    const violations = [];
+    const isTS = /\.tsx?$/.test(filePath);
 
-    return { passed: true };
-};
+    if (isTS && /:\s*any\b/.test(content)) {
+      violations.push(
+        "Type 'any' is forbidden in TypeScript; use a proper interface or unknown.",
+      );
+    }
+    if (isTS && /\bvar\s+[a-zA-Z_$]/.test(content)) {
+      violations.push("Use 'let' or 'const' instead of 'var'.");
+    }
+    if (/console\.(log|debug)\s*\(/.test(content)) {
+      violations.push(
+        "Debug console statement present; remove before shipping.",
+      );
+    }
+
+    if (violations.length === 0) {
+      console.log(JSON.stringify({}));
+      return;
+    }
+
+    console.log(
+      JSON.stringify({
+        hookSpecificOutput: {
+          hookEventName: "PostToolUse",
+          additionalContext:
+            "LINT (advisory) in " + filePath + ": " + violations.join(" "),
+        },
+      }),
+    );
+  } catch (e) {
+    console.log(JSON.stringify({}));
+  }
+});

@@ -4,7 +4,7 @@ let input='';process.stdin.on('data',c=>input+=c);process.stdin.on('end',()=>{
   const text=JSON.stringify(p);
   const conversation=JSON.stringify(p.transcript||[]);
   
-  // Check jika ada search request tapi tidak ada valid MCP result
+  // Detect search requests that lack any valid MCP result (fabrication risk)
   const hasSearchRequest=/trending|berita|news|viral/i.test(conversation);
   const hasValidMCP=/tavily_search.*?Detailed Results:[\s\S]{100,}/i.test(conversation);
   const hasMCPFailure=/failed|error|invalid|SUBSCRIPTION_TOKEN_INVALID/i.test(conversation);

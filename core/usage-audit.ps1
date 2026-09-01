@@ -1,5 +1,6 @@
-$proj = "C:\Users\vansy\.qwen\projects"
-$agents = (Get-ChildItem "C:\Users\vansy\.qwen\agents\*.md").BaseName
+$QH = Split-Path -Parent $PSScriptRoot
+$proj = Join-Path $QH "projects"
+$agents = (Get-ChildItem (Join-Path $QH "agents\*.md")).BaseName
 $subFiles = Get-ChildItem $proj -Recurse -Filter "agent-*.jsonl" -ErrorAction SilentlyContinue
 $metaFiles = Get-ChildItem $proj -Recurse -Filter "agent-*.meta.json" -ErrorAction SilentlyContinue
 $modelIds = @('kimi-k2.7-code','qwen3.7-max','qwen3.8-max-preview','qwen3.7-plus','qwen3.6-flash','deepseek-v4-pro','gemini-3.5-flash')

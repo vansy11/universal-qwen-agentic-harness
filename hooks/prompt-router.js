@@ -21,8 +21,12 @@ function fuzzy(prompt, target) {
   if (prompt.includes(target)) return true;
   const words = prompt.split(/\s+/);
   for (const word of words) {
-    if (word.length > 3 && levenshtein(word.toLowerCase(), target) <= 2)
-      return true;
+    const w = word.toLowerCase();
+    if (w.length <= 3) continue;
+    // Short words (4 chars) tolerate at most 1 typo to avoid false positives
+    // like "rest" -> "react"/"risk"; longer words keep the lenient distance 2.
+    const maxDist = w.length <= 4 ? 1 : 2;
+    if (levenshtein(w, target) <= maxDist) return true;
   }
   return false;
 }
@@ -237,6 +241,7 @@ const skillRouter = (userPrompt) => {
 
   // --- RESEARCH / WEB SEARCH ---
   if (
+    /https?:\/\//.test(p) ||
     anyOf(
       p,
       "research",
@@ -248,6 +253,9 @@ const skillRouter = (userPrompt) => {
       "analyze",
       "news",
       "trend",
+      "summarize",
+      "ringkas",
+      "rangkum",
     )
   ) {
     skills.add("skills/web-research-deep/SKILL.md");
@@ -408,3 +416,44 @@ const skillRouter = (userPrompt) => {
 };
 
 module.exports = skillRouter;
+
+// --- HOOK WRAPPER (UserPromptSubmit) ---
+// When Qwen Code invokes this file as a hook, route the incoming prompt and
+// inject the recommended skills + specialist agents as additional context.
+// When loaded via require() (core/router-eval.js) only the export above runs.
+if (require.main === module) {
+  let input = "";
+  process.stdin.on("data", (c) => (input += c));
+  process.stdin.on("end", () => {
+    try {
+      const data = JSON.parse(input);
+      const prompt = data.prompt || "";
+      if (!prompt.trim()) {
+        console.log(JSON.stringify({}));
+        return;
+      }
+      const { injectedSkills, injectedAgents } = skillRouter(prompt);
+      const skillNames = injectedSkills
+        .map((s) => s.replace(/^skills\//, "").replace(/\/SKILL\.md$/, ""))
+        .join(", ");
+      const agentNames = injectedAgents
+        .map((a) => a.replace(/^agents\//, "").replace(/\.md$/, ""))
+        .join(", ");
+      const directive =
+        `ROUTING: load skills [${skillNames}]; ` +
+        `available specialist agents [${agentNames}]. ` +
+        `For heavy tasks delegate via the agent tool; for light queries answer directly.`;
+
+      console.log(
+        JSON.stringify({
+          hookSpecificOutput: {
+            hookEventName: "UserPromptSubmit",
+            additionalContext: directive,
+          },
+        }),
+      );
+    } catch (e) {
+      console.log(JSON.stringify({}));
+    }
+  });
+}

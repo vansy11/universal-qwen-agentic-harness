@@ -10,7 +10,7 @@ tools:
   - grep_search
   - glob
   - run_shell_command
-  - task
+  - agent
 ---
 
 ## SPECIALIST PROTOCOL (QWEN STYLE)

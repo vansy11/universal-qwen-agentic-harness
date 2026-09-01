@@ -119,7 +119,7 @@ sequenceDiagram
 
 1. **Domain-Agnostic Quality Gate (`quality-gate.js`)**: Runs universal checks (AI-slop, leftover placeholders/TODOs, hardcoded secrets) on every output, then auto-detects the project domain and applies a tailored evaluator — **web** (Playwright headless), **api** (endpoint/validation), **python** (anti-pattern), **quant** (risk safeguards), **devops** (build/secret), or **general** (structure). Only FAIL findings block delivery: the gate emits a Stop-hook block decision and loops back for fixes, WARN findings are advisory, and clean approvals produce no output.
 2. **Hallucination Detection (`hallucination-guard.js`)**: Verifies quoted URLs, file paths, and facts against actual system state.
-3. **Auto Evaluation (`agents/self-evaluator.md` & `core/eval-runner.js`)**: Assesses deliverables against original prompt requirements.
+3. **Auto Evaluation (`agents/self-evaluator.md` & `core/router-eval.js`)**: Assesses deliverables against original prompt requirements.
 4. **Auto-Memory Persistence (`auto-memory.js`)**: Automatically extracts architectural decisions, user preferences, and bug fixes, saving them to `.qwen/memories/` or `.qwen/projects/`.
 5. **System Improvement Tracking (`improvement-tracker.js` & `protocol-updater.js`)**: Logs system enhancements and updates protocol documentation automatically.
 6. **Scored Session Reflection (`reflection.js`)**: Scores each turn by detecting user corrections, tool-call retries, error loops, AI-slop, and hallucination markers, then appends the result to `evolution/reflection-log.jsonl` for the improvement pipeline. Critical scores (<50) are flagged to `evolution/critical-alerts.jsonl`.

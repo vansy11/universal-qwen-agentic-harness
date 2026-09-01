@@ -152,11 +152,13 @@ async function evalWeb(report) {
       "http://localhost:3000",
       "Web UI evaluation",
     );
-    if (result.status === "FAIL") {
+    // Only real observed defects (status FAIL) block. SKIP (app not reachable,
+    // evaluator unavailable) and PASS never block the gate.
+    if (result && result.status === "FAIL") {
       report.push(...result.reasons);
     }
   } catch (e) {
-    // Playwright not running or app not started — skip silently
+    // Evaluator unavailable — never wedge the session.
   }
 }
 

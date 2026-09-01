@@ -5,9 +5,11 @@
  * Called by session-bootstrap or manually.
  */
 const fs = require('fs');
-const ROUTER_FILE = 'C:/Users/vansy/.qwen/hooks/prompt-router.js';
-const LOG_FILE = 'C:/Users/vansy/.qwen/evolution/improvement-log.jsonl';
-const SCORE_FILE = 'C:/Users/vansy/.qwen/evolution/route-scores.json';
+const path = require('path');
+const QH = path.resolve(__dirname, '..').replace(/\\/g, '/');
+const ROUTER_FILE = QH + '/hooks/prompt-router.js';
+const LOG_FILE = QH + '/evolution/improvement-log.jsonl';
+const SCORE_FILE = QH + '/evolution/route-scores.json';
 const CACHE_DAYS = 3 * 24 * 60 * 60 * 1000;
 
 // Check cache

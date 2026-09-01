@@ -34,3 +34,33 @@ module.exports = async function (hookData) {
     
     return { decision: "approve" };
 };
+
+// --- HOOK WRAPPER (PreToolUse) ---
+// Invoked as `node quant-math-guard.js`: read the shell command from stdin,
+// run the guard, and emit a PreToolUse permission decision.
+if (require.main === module) {
+  let input = "";
+  process.stdin.on("data", (c) => (input += c));
+  process.stdin.on("end", async () => {
+    try {
+      const data = JSON.parse(input);
+      const command = data.tool_input?.command || "";
+      const result = await module.exports({ command });
+      if (result && result.decision === "block") {
+        console.log(
+          JSON.stringify({
+            hookSpecificOutput: {
+              hookEventName: "PreToolUse",
+              permissionDecision: "deny",
+              permissionDecisionReason: result.reason,
+            },
+          }),
+        );
+      } else {
+        console.log(JSON.stringify({}));
+      }
+    } catch (e) {
+      console.log(JSON.stringify({}));
+    }
+  });
+}
