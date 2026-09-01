@@ -25,6 +25,7 @@ When the user asks you to read or write a Word, Excel, or PowerPoint file:
 2. Execute via `run_shell_command`:
    `echo {"function": "write", "file_path": "C:/path/to/output.docx", "data": "This is the content for the Word doc."} | python core/office-engine.py`
 3. For PowerPoint, split slides in the data string using "---".
+4. For Excel (.xlsx), the data string is rows separated by "\n", cells separated by tab (preferred) or comma.
 
 ## FILE WRITE PROTOCOL (MANDATORY)
 BEFORE every write_file or edit_file call:

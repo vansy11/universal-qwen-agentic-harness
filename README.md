@@ -17,7 +17,7 @@
 
 ## Executive Summary
 
-The **Universal Qwen Agentic Harness** transforms the Qwen Code CLI into an autonomous, enterprise-grade software engineering and research environment. Rather than relying on a single context window to write, test, and review code, this harness provides an **Orchestrator-Worker** architecture powered by 18 native lifecycle hooks, 30 specialist sub-agents, 46 technical skills, 15 slash commands, 13 enforced rule sets, and 15 Model Context Protocol (MCP) integrations.
+The **Universal Qwen Agentic Harness** transforms the Qwen Code CLI into an autonomous, enterprise-grade software engineering and research environment. Rather than relying on a single context window to write, test, and review code, this harness provides an **Orchestrator-Worker** architecture powered by 18 native lifecycle hooks, 30 specialist sub-agents, 46 technical skills, 15 slash commands, 15 enforced rule sets, and 15 Model Context Protocol (MCP) integrations.
 
 ```
 User Prompt ──► Prompt Router ──► Orchestration ──► Specialist Agents ──► Security Check ──► Quality Gate ──► Humanized Output
@@ -33,7 +33,7 @@ User Prompt ──► Prompt Router ──► Orchestration ──► Specialist
 | **Technical Skills**  | **46** | Production guidelines and workflows for full-stack, security, DevOps, data pipelines, and quantitative trading  |
 | **Slash Commands**    | **15** | Direct triggers for instant agent delegation (`/fullstack`, `/review`, `/research`, `/quant`, `/pentest`, etc.) |
 | **Lifecycle Hooks**   | **18** | Cross-platform Node.js & Python scripts enforcing security, token efficiency, quality gates, and auto-memory    |
-| **Enforced Rules**    | **13** | Strict coding standards, security baselines, output formatting, and verification protocols                      |
+| **Enforced Rules**    | **15** | Strict coding standards, security baselines, output formatting, and verification protocols                      |
 | **MCP Integrations**  | **15** | Integrations for real-time web search, GitHub, filesystem, browser testing, live library docs, and memory       |
 
 ---
@@ -46,16 +46,15 @@ Automatically evaluates task complexity. Simple queries are answered directly to
 
 ### 2. Auto Prompting & Context Handoff
 
-Uses the `context-builder` agent and `prompt-optimizer.js` to extract codebase context, remove prompt fluff, enforce token budgets, and format structured JSON handoffs (`handoff-schema.json`) for seamless sub-agent execution.
+Uses the `context-builder` agent, `context-pruner.js`, and `prompt-optimizer.js` to strip prompt noise, extract codebase context, enforce token budgets, and format structured JSON handoffs (`handoff-schema.json`). The `prompt-router.js` hook classifies every prompt across **16 domain intents** with typo-tolerant Levenshtein matching, then auto-injects the relevant skills and specialist agents.
 
 ### 3. Auto Evaluation & Quality Control
 
-Integrates multi-layered verification:
+Integrates multi-layered, domain-aware verification:
 
 - **System Evaluator (`core/eval-runner.js` / `/eval`)**: Tests routing precision against prompt benchmarks.
 - **Self-Evaluator Agent (`agents/self-evaluator.md`)**: Assesses completion criteria before delivery.
-- **Playwright Runtime Evaluation**: Automatically runs headless browser checks to verify 3D canvas rendering, DOM updates, and scroll animations on generated frontend apps.
-- **Quality Gate (`hooks/quality-gate.js`)**: Detects robotic "AI Slop" phrasing and triggers the `humanizer` agent for natural human-like rewrites.
+- **Domain-Agnostic Quality Gate (`hooks/quality-gate.js`)**: Auto-detects the project domain and applies a tailored evaluator — **web** (Playwright headless checks), **api** (endpoint/validation review), **python** (anti-pattern detection), **quant** (risk safeguards), **devops** (build/secret checks), or **general** (structure review). Universal checks for AI-slop, leftover placeholders, and hardcoded secrets run on every output. Only FAIL findings block delivery through a proper Stop-hook block decision (WARNs are advisory); clean approvals stay silent.
 
 ### 4. Auto Loop & Resiliency Engine
 

@@ -46,7 +46,7 @@ The **Universal Qwen Agentic Harness** is an enterprise-grade, event-driven **Or
                                                          │
                                                ┌─────────▼──────────┐
                                                │ Tool & MCP Layer   │
-                                               │ (45 Skills, 15 MCP)│
+                                               │ (46 Skills, 15 MCP)│
                                                └─────────┬──────────┘
                                                          │
                                                ┌─────────▼──────────┐
@@ -79,27 +79,35 @@ The **Universal Qwen Agentic Harness** is an enterprise-grade, event-driven **Or
 ### 2. Auto Prompting & Context Engineering
 
 - **Context Builder (`agents/context-builder.md`)**: Automatically gathers codebase state, extracts structural decisions, formats concise handoff JSON packages (`handoff-schema.json`), and feeds structured context to sub-agents.
+- **Context Pruner (`hooks/context-pruner.js`)**: Strips noise from the user prompt before processing — deduplicates redundant `system-reminder` blocks, removes tool/subagent error artifacts, collapses excess whitespace, and trims empty XML tags.
 - **Prompt Optimizer (`core/prompt-optimizer.js`)**: Minifies whitespace, eliminates redundant politeness phrases, injects active rules and relevant long-term memories, and calculates token budgets prior to API dispatch.
-- **Prompt Router (`hooks/prompt-router.js`)**: Matches incoming prompts against keyword routing rules, classifying prompts into light (direct) or heavy (orchestrated) execution paths.
+- **Prompt Router (`hooks/prompt-router.js`)**: Universal intent router with **16 domain intents** (frontend, backend/API, database, DevOps, quant/trading, data/ETL, mobile, security, research, docs, testing, git, migration, performance, network, social/PDF/SEO). Uses **Levenshtein fuzzy matching** to tolerate typos, then auto-injects the relevant skills and specialist agents for the detected domain.
 
 ### 3. Lifecycle Hooks Engine (18 Hook Scripts)
 
 Cross-platform Node.js & Python scripts executed automatically by Qwen Code at specific turn boundaries:
 
 - **Session Start**: Environment preparation and session state initialization (`session-bootstrap.js`, `auto-resume-watcher.js`).
-- **Prompt Interception**: Context pruning and complexity routing (`context-pruner.js`, `prompt-router.js`).
+- **Prompt Interception**: Context pruning and universal intent routing (`context-pruner.js`, `prompt-router.js`).
 - **Tool Guarding**: Command security checking, trading risk boundaries, and mathematical rigor (`security-check.js`, `trading-risk-guard.js`, `quant-math-guard.js`).
 - **Post-Tool Processing**: Real-time token monitoring, automatic code linting, and standard formatting (`token-monitor.js`, `lint-check.js`, `auto-format.js`).
-- **Display Filtering**: Parent noise suppression and raw tool output sanitization (`parent-silencer.js`, `output-sanitizer.js`, `subagent-presenter.js`).
-- **Stop Validation & Reflection**: Quality gating, anti-slop verification, hallucination guards, auto-memory persistence, improvement tracking, protocol synchronization, and session reflection (`quality-gate.js`, `hallucination-guard.js`, `auto-memory.js`, `reflection.js`, `improvement-tracker.js`, `protocol-updater.js`).
+- **Display Filtering**: Parent/subagent noise suppression and raw tool output sanitization (`parent-silencer.js`, `output-sanitizer.js`, `subagent-presenter.js`).
+- **Stop Validation & Reflection**: Domain-agnostic quality gating, anti-slop verification, hallucination guards, auto-memory persistence, improvement tracking, protocol synchronization, and scored session reflection (`quality-gate.js`, `hallucination-guard.js`, `auto-memory.js`, `reflection.js`, `improvement-tracker.js`, `protocol-updater.js`).
 - **Pre-Compact Distillation**: Context distillation prior to token compaction (`memory-distiller.py`).
 
 ### 4. Auto Evaluation & Quality Control
 
 - **System Routing Evaluator (`core/eval-runner.js` / `/eval`)**: Measures prompt routing precision against test datasets (`evals/cases.json`).
 - **Self-Evaluator Agent (`agents/self-evaluator.md`)**: Assesses completion criteria, formatting, and verifies that no unresolved placeholders exist before delivering work.
-- **Runtime Application Evaluator (`autoEvaluate` Playwright Integration)**: Runs headless browser automation to test generated frontend applications for runtime errors, missing 3D canvases, or broken animations.
-- **Quality Gatekeeper (`hooks/quality-gate.js` & `agents/humanizer.md`)**: Automatically rejects generic AI response patterns ("AI Slop") and triggers humanized rewrites.
+- **Domain-Agnostic Quality Gate (`hooks/quality-gate.js`)**: Auto-detects the project domain and applies a tailored evaluation strategy. Universal checks (AI-slop, placeholder/TODO remnants, hardcoded secrets) run on every output, then a domain-specific evaluator applies:
+  - **web** → Playwright headless runtime evaluation (`core/eval-runner.js`).
+  - **api** → Endpoint structure, error handling, and input validation checks.
+  - **python** → Anti-pattern detection (bare `except`, wildcard imports, debug prints).
+  - **quant** → Risk-management and data-validation safeguards.
+  - **devops** → Multi-stage builds, health checks, and secret-leak detection.
+  - **general** → Code structure and error-handling review.
+  - Enforcement: only FAIL findings emit a Stop-hook block decision (looping back for fixes); WARN findings are advisory, and clean approvals produce no output.
+- **Quality Gatekeeper (`agents/quality-gatekeeper.md` & `agents/humanizer.md`)**: Rejects generic AI response patterns ("AI Slop") and triggers humanized rewrites.
 
 ### 5. Auto Loop & Resiliency Engine
 
@@ -154,7 +162,7 @@ Cross-platform Node.js & Python scripts executed automatically by Qwen Code at s
 
 ---
 
-### 2. Technical Skills (45 Skills)
+### 2. Technical Skills (46 Skills)
 
 | Domain                     | Skill                           | Description                                                         |
 | :------------------------- | :------------------------------ | :------------------------------------------------------------------ |
@@ -193,6 +201,7 @@ Cross-platform Node.js & Python scripts executed automatically by Qwen Code at s
 |                            | `api-integration-exa-tavily`    | Unified search API integration patterns (Tavily/Exa/Brave)          |
 |                            | `social-media-monitor`          | Social media metric tracking and sentiment analysis                 |
 |                            | `pdf-extraction`                | High-fidelity text and table extraction from PDF files              |
+|                            | `ms-office-engine`              | Read/write Microsoft Office files (.docx, .xlsx, .pptx) locally     |
 | **Quantitative Finance**   | `finance-analysis`              | DCF valuation, portfolio optimization, VaR calculation              |
 |                            | `quant-algo-trading`            | Quantitative strategy backtesting with Backtrader/VectorBT          |
 |                            | `derivatives-pricing`           | Black-Scholes options pricing, Greeks, and Monte Carlo models       |
@@ -234,32 +243,33 @@ Cross-platform Node.js & Python scripts executed automatically by Qwen Code at s
 | :----------------------- | :------------------------ | :------------------ | :-----: | :------------------------------------------------------------------ |
 | `session-bootstrap.js`   | `SessionStart`            | All                 | 10000ms | Initializes session environment & environment variables             |
 | `auto-resume-watcher.js` | `SessionStart`            | All                 | 10000ms | Monitors background stalls and injects auto-resume prompts          |
-| `context-pruner.js`      | `UserPromptSubmit`        | All                 | 5000ms  | Prunes context tokens before prompt execution                       |
-| `prompt-router.js`       | `UserPromptSubmit`        | All                 | 15000ms | Analyzes prompt complexity and injects routing directives           |
+| `context-pruner.js`      | `UserPromptSubmit`        | All                 | 5000ms  | Strips prompt noise: dedup reminders, tool artifacts, empty tags    |
+| `prompt-router.js`       | `UserPromptSubmit`        | All                 | 15000ms | Universal 16-intent router with Levenshtein fuzzy skill/agent inject |
 | `security-check.js`      | `PreToolUse`              | `run_shell_command` | 5000ms  | Blocks destructive terminal commands (`rm -rf`, `git push --force`) |
 | `trading-risk-guard.js`  | `PreToolUse`              | `run_shell_command` | 5000ms  | Enforces trading limits and position risk controls                  |
 | `quant-math-guard.js`    | `PreToolUse`              | `run_shell_command` | 5000ms  | Validates quantitative calculations and econometric formulas        |
 | `token-monitor.js`       | `PostToolUse`             | `*`                 | 5000ms  | Tracks turn-by-turn token consumption                               |
 | `lint-check.js`          | `PostToolUse`             | `write_file`        | 5000ms  | Runs linter checks after file modifications                         |
 | `auto-format.js`         | `PostToolUse`             | `write_file`        | 5000ms  | Auto-formats edited files to project style                          |
-| `parent-silencer.js`     | `MessageDisplay`          | All                 | 5000ms  | Filters parent conversation noise during sub-agent runs             |
+| `parent-silencer.js`     | `MessageDisplay`          | All                 | 5000ms  | Suppresses parent echo, thinking tags, raw JSON, subagent chatter    |
 | `output-sanitizer.js`    | `MessageDisplay`          | All                 | 5000ms  | Cleans raw MCP/tool JSON dumps from output                          |
 | `subagent-presenter.js`  | `SubagentStart`           | All                 | 5000ms  | Formats sub-agent start/progress notifications                      |
 | `hallucination-guard.js` | `Stop`                    | All                 | 5000ms  | Flags ungrounded claims, non-existent URLs, or code bugs            |
-| `quality-gate.js`        | `Stop`                    | All                 | 10000ms | Rejects robotic AI slop phrasing and forces humanization            |
+| `quality-gate.js`        | `Stop`                    | All                 | 10000ms | Domain-agnostic QC: blocks on FAIL only, silent on approval          |
 | `auto-memory.js`         | `Stop`                    | All                 | 10000ms | Persists key learnings to long-term memory                          |
 | `improvement-tracker.js` | `Stop`                    | All                 | 10000ms | Logs continuous system improvements                                 |
 | `protocol-updater.js`    | `Stop`                    | All                 |    —    | Syncs protocol documentation with codebase updates                  |
-| `reflection.js`          | `Stop`                    | All                 | 10000ms | Conducts end-of-turn session reflection                             |
+| `reflection.js`          | `Stop`                    | All                 | 10000ms | Scores each turn (corrections/retries/slop) → evolution-log.jsonl   |
 | `memory-distiller.py`    | `PreCompact`              | All                 | 15000ms | Distills context into structured memory before compaction           |
 
 ---
 
-### 5. Enforced System Rules (13 Rules)
+### 5. Enforced System Rules (15 Rules)
 
 - **Universal Rules (`rules/_universal/`)**:
   - `chain-of-thought.md`: Requires structured reasoning before substantive output.
   - `file-write-protocol.md`: Enforces mandatory `read_file` calls prior to writing files.
+  - `memory-freshness.md`: Forbids stale memory rehashing; demands fresh synthesis from current state.
   - `output-contract.md`: Direct answers, tables, code blocks, zero filler.
   - `output-format.md`: Single clean response format rules.
   - `power-protocol.md`: Adaptive 5-step engineering framework (Think-Search-Execute-Verify-Learn).
@@ -268,6 +278,7 @@ Cross-platform Node.js & Python scripts executed automatically by Qwen Code at s
   - `web-search-priority.md`: Prioritizes Brave -> Tavily -> Exa -> Web-Research.
 - **Domain Standards**:
   - `common/coding-style.md`: DRY, error handling, self-documenting code.
+  - `common/universal-coding.md`: Language-agnostic fallback (naming, validation, security, testing) for PHP, Go, Rust, Java, C#, Ruby, etc.
   - `execution/delivery-rules.md`: Executable verification before completion reporting.
   - `python/coding-style.md`: PEP 8 compliance, strict typing, async I/O.
   - `sql/query-safety.md`: Parameterized queries, explicit column selection.

@@ -76,8 +76,8 @@ sequenceDiagram
 
 ### Phase 2: Interception & Auto-Routing (`UserPromptSubmit`)
 
-1. **Context Window Pruning (`context-pruner.js`)**: Scans conversation history length and trims stale tokens, maintaining optimal context headroom.
-2. **Intent Classification & Routing (`prompt-router.js`)**: Analyzes user prompt against 40+ keyword routing patterns:
+1. **Context Window Pruning (`context-pruner.js`)**: Strips noise from the prompt before processing — deduplicates redundant `system-reminder` blocks, removes tool/subagent error artifacts, collapses excess whitespace, and trims empty XML tags to maintain optimal context headroom.
+2. **Intent Classification & Routing (`prompt-router.js`)**: Universal intent router that classifies prompts across **16 domain intents** (frontend, backend/API, database, DevOps, quant/trading, data/ETL, mobile, security, research, docs, testing, git, migration, performance, network, social/PDF/SEO) using **Levenshtein fuzzy matching** to tolerate typos, then auto-injects the relevant skills and specialist agents:
    - **Light Query** (e.g., "Explain REST APIs"): Bypasses multi-agent orchestration, answering directly.
    - **Heavy Task** (e.g., "Build a full-stack SaaS app with Next.js and PostgreSQL"): Automatically injects routing directives and delegates to `fullstack-orchestrator`.
 
@@ -89,7 +89,7 @@ sequenceDiagram
 
 ### Phase 4: Specialist Execution, Skills, & MCPs
 
-1. **Skill Directives**: Sub-agents load specialized rules from `.qwen/skills/` (45 available skills across Frontend, Backend, DevOps, Security, Data, and Quantitative Finance).
+1. **Skill Directives**: Sub-agents load specialized rules from `.qwen/skills/` (46 available skills across Frontend, Backend, DevOps, Security, Data, and Quantitative Finance).
 2. **MCP Tool Operations**:
    - **External Research**: `web-researcher` queries **Tavily**, **Exa**, **Brave Search**, **Firecrawl**, or **Parallel Search MCP**.
    - **File & Code I/O**: `backend-engineer` executes operations via **Filesystem** or **GitHub** MCP.
@@ -111,18 +111,18 @@ sequenceDiagram
 
 ### Phase 7: Display Filtering (`MessageDisplay` & `SubagentStart`)
 
-1. **Parent Noise Suppression (`parent-silencer.js`)**: Silences verbose internal logs from sub-agents to keep the main user terminal clean.
+1. **Parent Noise Suppression (`parent-silencer.js`)**: Suppresses parent-agent echo of subagent results, orphaned thinking/reasoning tags, raw tool-call JSON dumps, and internal subagent status chatter to keep the main user terminal clean.
 2. **Output Sanitization (`output-sanitizer.js`)**: Strips raw tool call payloads and JSON dumps from user-visible outputs.
 3. **Sub-Agent Formatting (`subagent-presenter.js`)**: Formats sub-agent progress notifications cleanly.
 
 ### Phase 8: Quality Gate, Auto Evaluation & Memory (`Stop`)
 
-1. **Anti-Slop Quality Gate (`quality-gate.js`)**: Scans final responses for generic AI boilerplate ("Certainly!", "Here is your code..."). If detected, blocks delivery and delegates to `humanizer` agent for natural rewriting.
+1. **Domain-Agnostic Quality Gate (`quality-gate.js`)**: Runs universal checks (AI-slop, leftover placeholders/TODOs, hardcoded secrets) on every output, then auto-detects the project domain and applies a tailored evaluator — **web** (Playwright headless), **api** (endpoint/validation), **python** (anti-pattern), **quant** (risk safeguards), **devops** (build/secret), or **general** (structure). Only FAIL findings block delivery: the gate emits a Stop-hook block decision and loops back for fixes, WARN findings are advisory, and clean approvals produce no output.
 2. **Hallucination Detection (`hallucination-guard.js`)**: Verifies quoted URLs, file paths, and facts against actual system state.
 3. **Auto Evaluation (`agents/self-evaluator.md` & `core/eval-runner.js`)**: Assesses deliverables against original prompt requirements.
 4. **Auto-Memory Persistence (`auto-memory.js`)**: Automatically extracts architectural decisions, user preferences, and bug fixes, saving them to `.qwen/memories/` or `.qwen/projects/`.
 5. **System Improvement Tracking (`improvement-tracker.js` & `protocol-updater.js`)**: Logs system enhancements and updates protocol documentation automatically.
-6. **Session Reflection (`reflection.js`)**: Performs end-of-session performance analysis.
+6. **Scored Session Reflection (`reflection.js`)**: Scores each turn by detecting user corrections, tool-call retries, error loops, AI-slop, and hallucination markers, then appends the result to `evolution/reflection-log.jsonl` for the improvement pipeline. Critical scores (<50) are flagged to `evolution/critical-alerts.jsonl`.
 
 ### Phase 9: Context Compression (`PreCompact`)
 
@@ -136,23 +136,23 @@ sequenceDiagram
 | :----------------------- | :------------------- | :------------------ | :-----: | :--------------------------------------------------------- |
 | `session-bootstrap.js`   | `SessionStart`       | All                 | 10000ms | Initializes session environment & environment variables    |
 | `auto-resume-watcher.js` | `SessionStart`       | All                 | 10000ms | Monitors background stalls and injects auto-resume prompts |
-| `context-pruner.js`      | `UserPromptSubmit`   | All                 | 5000ms  | Prunes context tokens before prompt execution              |
-| `prompt-router.js`       | `UserPromptSubmit`   | All                 | 15000ms | Analyzes prompt complexity and injects routing directives  |
+| `context-pruner.js`      | `UserPromptSubmit`   | All                 | 5000ms  | Strips prompt noise: dedup reminders, tool artifacts, empty tags |
+| `prompt-router.js`       | `UserPromptSubmit`   | All                 | 15000ms | Universal 16-intent router with Levenshtein fuzzy skill/agent inject |
 | `security-check.js`      | `PreToolUse`         | `run_shell_command` | 5000ms  | Blocks destructive terminal commands                       |
 | `trading-risk-guard.js`  | `PreToolUse`         | `run_shell_command` | 5000ms  | Enforces trading limits and position risk controls         |
 | `quant-math-guard.js`    | `PreToolUse`         | `run_shell_command` | 5000ms  | Validates quantitative formulas and econometric bounds     |
 | `token-monitor.js`       | `PostToolUse`        | `*`                 | 5000ms  | Measures token consumption on every turn                   |
 | `lint-check.js`          | `PostToolUse`        | `write_file`        | 5000ms  | Runs linter checks after file modifications                |
 | `auto-format.js`         | `PostToolUse`        | `write_file`        | 5000ms  | Auto-formats edited files to project style                 |
-| `parent-silencer.js`     | `MessageDisplay`     | All                 | 5000ms  | Filters parent conversation noise during sub-agent runs    |
+| `parent-silencer.js`     | `MessageDisplay`     | All                 | 5000ms  | Suppresses parent echo, thinking tags, raw JSON, subagent chatter |
 | `output-sanitizer.js`    | `MessageDisplay`     | All                 | 5000ms  | Cleans raw MCP/tool JSON dumps from output                 |
 | `subagent-presenter.js`  | `SubagentStart`      | All                 | 5000ms  | Formats sub-agent start/progress notifications             |
 | `hallucination-guard.js` | `Stop`               | All                 | 5000ms  | Flags ungrounded claims, non-existent URLs, or code bugs   |
-| `quality-gate.js`        | `Stop`               | All                 | 10000ms | Rejects robotic AI slop phrasing and forces humanization   |
+| `quality-gate.js`        | `Stop`               | All                 | 10000ms | Domain-agnostic QC: blocks on FAIL only, silent on approval |
 | `auto-memory.js`         | `Stop`               | All                 | 10000ms | Persists key learnings to long-term memory                 |
 | `improvement-tracker.js` | `Stop`               | All                 | 10000ms | Logs continuous system improvements                        |
 | `protocol-updater.js`    | `Stop`               | All                 |    —    | Syncs protocol documentation with codebase updates         |
-| `reflection.js`          | `Stop`               | All                 | 10000ms | Conducts end-of-turn session reflection                    |
+| `reflection.js`          | `Stop`               | All                 | 10000ms | Scores each turn (corrections/retries/slop) → reflection-log.jsonl |
 | `memory-distiller.py`    | `PreCompact`         | All                 | 15000ms | Distills context into structured memory before compaction  |
 
 ---

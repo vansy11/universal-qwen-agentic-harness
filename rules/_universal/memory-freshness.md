@@ -1,20 +1,20 @@
 # MEMORY FRESHNESS, AUTO-EVAL & SELF-IMPROVEMENT PROTOCOL
 
-## 1. Role Memori: Otak & Latar Belakang (Context & Brain)
+## 1. Memory Role: Context & Brain
 
-- **HANYA Pengetahuan Latar Belakang**: Memori (`.qwen/memories/` & `.qwen/projects/`) digunakan HANYA sebagai acuan preferensi, aturan, dan batasan konteks.
-- **DILARANG Copy-Paste / Mengulang Memori**: Dilarang mengutip atau menyajikan kembali jawaban usang dari memori secara mentah seolah-olah itu adalah jawaban baru.
-- **Fresh Synthesis Required**: Setiap pertanyaan/permintaan HARUS menghasilkan jawaban baru yang disintesis dari file asli, kode saat ini, atau data real-time terkini.
+- **Background Knowledge Only**: Memory (`.qwen/memories/` & `.qwen/projects/`) is used ONLY as a reference for preferences, rules, and context boundaries.
+- **No Copy-Paste / Memory Rehashing**: Never quote or re-present stale memory answers verbatim as if they were new answers.
+- **Fresh Synthesis Required**: Every question/request MUST produce a new answer synthesized from source files, current code, or the latest real-time data.
 
 ## 2. Auto-Eval (Self-Evaluation Gate)
 
-Sebelum memberikan output ke pengguna, lakukan evaluasi kualitas internal:
+Before delivering output to the user, run an internal quality evaluation:
 
-1. **Freshness Verification**: Apakah jawaban ini menganalisis keadaan file/sistem saat ini dan bukan merely re-hashing data lama?
-2. **Context Alignment**: Apakah jawaban sudah sesuai dengan preferensi di memori tanpa harus menceritakan ulang isi memori tersebut?
-3. **Accuracy & Quality Check**: Apakah tidak ada informasi yang berpotensi halusinasi, slop, atau filler yang tidak perlu?
+1. **Freshness Verification**: Does this answer analyze the current state of files/systems rather than merely re-hashing old data?
+2. **Context Alignment**: Does the answer respect stored preferences without reciting the memory contents back?
+3. **Accuracy & Quality Check**: Is the output free of potential hallucinations, slop, or unnecessary filler?
 
 ## 3. Auto Self-Improvement Loop
 
-- **Belajar dari Koreksi & Konfirmasi**: Tangkap secara otomatis setiap koreksi (_correction_) maupun keberhasilan (_confirmation_) dari pengguna.
-- **Pembaruan Otomatis**: Simpan pola perbaikan ke `evolution/improvement-queue.md` dan struktur memori via `auto-memory.js` secara silent tanpa mengganggu alur percakapan utama.
+- **Learn from Corrections & Confirmations**: Automatically capture every correction and every confirmation from the user.
+- **Automatic Updates**: Persist improvement patterns to `evolution/improvement-queue.md` and memory structures via `auto-memory.js`, silently, without disrupting the main conversation flow.

@@ -35,7 +35,7 @@ def read_office(file_path):
     return {"text": text}
 
 def write_office(file_path, content):
-    """Writes text to a .docx or .pptx file."""
+    """Writes text to a .docx, .xlsx, or .pptx file."""
     ext = os.path.splitext(file_path)[1].lower()
     
     if ext == ".docx":
@@ -61,7 +61,19 @@ def write_office(file_path, content):
                 shapes.placeholders[1].text = slide_text.strip()
         prs.save(file_path)
         return {"status": "success", "message": f"PowerPoint saved to {file_path}"}
-        
+
+    elif ext == ".xlsx":
+        from openpyxl import Workbook
+        wb = Workbook()
+        ws = wb.active
+        for line in content.split("\n"):
+            if not line.strip():
+                continue
+            cells = line.split("\t") if "\t" in line else line.split(",")
+            ws.append([cell.strip() for cell in cells])
+        wb.save(file_path)
+        return {"status": "success", "message": f"Excel workbook saved to {file_path}"}
+
     else:
         return {"error": "Unsupported write format"}
 

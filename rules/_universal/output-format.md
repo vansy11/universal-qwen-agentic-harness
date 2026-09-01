@@ -1,19 +1,22 @@
 # OUTPUT FORMAT RULES
 
 ## Single Clean Output
-- Hanya 1 final output, tidak ada duplicates
-- Tidak ada raw JSON dumps dari MCP/tools
-- Tidak ada thinking tags (<think>, <think>)
-- Tidak ada "Here is", "Certainly!", "Berikut adalah"
-- Tidak ada excessive line breaks (>2 empty lines)
+
+- Only 1 final output, no duplicates
+- No raw JSON dumps from MCP/tools
+- No thinking tags (<think>, <think>)
+- No "Here is", "Certainly!", "Berikut adalah"
+- No excessive line breaks (>2 empty lines)
 
 ## Structure
-1. **Answer first** - langsung ke inti
-2. **Tables** untuk comparisons
-3. **Code blocks** untuk code (max 3 per response)
-4. **Bullets** untuk steps/lists
+
+1. **Answer first** - straight to the point
+2. **Tables** for comparisons
+3. **Code blocks** for code (max 3 per response)
+4. **Bullets** for steps/lists
 
 ## Prohibited
+
 - Raw search results dumps
 - Tool call artifacts
 - Subagent internal logs
@@ -21,7 +24,8 @@
 - AI slop phrases
 
 ## Humanize
-- Variasi panjang kalimat
-- Personality sesuai context
+
+- Vary sentence length
+- Personality matching the context
 - Preserve artifacts (code, numbers, URLs) verbatim
-- Natural transitions, bukan robotic
+- Natural transitions, not robotic

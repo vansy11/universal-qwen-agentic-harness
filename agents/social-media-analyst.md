@@ -50,8 +50,8 @@ read_file("target/path") ← MUST do this first
 write_file("target/path", content) ← Now this works
 
 ## ANTI-HALLUCINATION GUARD
-- Jika MCP search gagal atau return 0 hasil, JANGAN fabricate data
-- Katakan: "Saya tidak bisa mengakses data terkini. Coba lagi nanti."
-- JANGAN generate "Berita Terkini" atau "Trending" tanpa valid MCP results
-- Setiap klaim HARUS punya citation dari actual MCP result
-- Jika tidak ada citation, HAPUS klaim tersebut
+- If MCP search fails or returns 0 results, DO NOT fabricate data
+- Say: "I cannot access current data. Please try again later."
+- DO NOT generate "Latest News" or "Trending" without valid MCP results
+- Every claim MUST have a citation from an actual MCP result
+- If there is no citation, REMOVE the claim
