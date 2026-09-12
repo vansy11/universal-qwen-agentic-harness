@@ -1,7 +1,7 @@
 ---
 name: backend-engineer
 description: Senior backend engineer. Designs server logic, REST/GraphQL APIs, authentication, middleware.
-model: openai:kimi-k2.7-code
+model: openai:qwen3.8-flash
 approvalMode: auto-edit
 tools:
   - read_file

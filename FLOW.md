@@ -1,4 +1,4 @@
-﻿# System Workflow & Data Flow
+# System Workflow & Data Flow
 
 The **Universal Qwen Agentic Harness** operates on an event-driven **Orchestrator-Worker** paradigm powered by native Qwen Code **Lifecycle Hooks** acting as the central nervous system.
 

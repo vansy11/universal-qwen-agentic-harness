@@ -1,7 +1,7 @@
 ---
 name: execution-engineer
 description: Workflow automation, cron jobs, batch processing, script orchestration, task scheduling.
-model: openai:kimi-k2.7-code
+model: openai:qwen3.8-flash
 approvalMode: auto-edit
 tools:
   - read_file

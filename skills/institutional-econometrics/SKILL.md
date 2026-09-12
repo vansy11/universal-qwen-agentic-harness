@@ -1,4 +1,4 @@
-﻿---
+---
 name: institutional-econometrics
 description: Advanced financial math, risk metrics, and time-series analysis. Forbids AI from guessing mathematical formulas.
 metadata:

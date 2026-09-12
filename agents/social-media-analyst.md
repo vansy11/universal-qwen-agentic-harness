@@ -1,7 +1,7 @@
 ---
 name: social-media-analyst
 description: Social media monitoring, brand sentiment, engagement metrics, influencer tracking, crisis detection.
-model: openai:qwen3.6-flash
+model: openai:qwen3.8-flash
 approvalMode: auto-edit
 tools:
   - read_file

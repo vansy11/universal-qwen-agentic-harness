@@ -1,4 +1,4 @@
-﻿---
+---
 name: derivatives-pricing
 description: Options pricing, Greeks (Black-Scholes), and Monte Carlo Simulations for complex derivatives.
 metadata:

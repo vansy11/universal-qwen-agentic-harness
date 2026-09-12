@@ -1,4 +1,4 @@
-﻿---
+---
 description: Audit harness usage (agents, models, MCPs, skills)
 ---
 

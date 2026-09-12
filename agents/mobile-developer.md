@@ -1,7 +1,7 @@
 ---
 name: mobile-developer
 description: React Native/Flutter mobile apps, native modules, offline-first architecture, app store deployment.
-model: openai:kimi-k2.7-code
+model: openai:qwen3.8-flash
 approvalMode: auto-edit
 tools:
   - read_file

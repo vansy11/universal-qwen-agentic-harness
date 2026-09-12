@@ -1,4 +1,11 @@
-﻿# UI Animation Master (GSAP, Framer, Motion.dev)
+---
+name: ui-animation-gsap-framer
+description: Expert-level web animation with Motion.dev, GSAP, and Framer Motion. Scroll triggers, micro-interactions, 60fps transform-only rules, reduced-motion support.
+metadata:
+  category: frontend
+---
+
+# UI Animation Master (GSAP, Framer, Motion.dev)
 Expert-level animation implementation for web interfaces.
 
 ## When to Activate

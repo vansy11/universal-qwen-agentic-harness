@@ -1,4 +1,4 @@
-﻿# Escalation Rules
+# Escalation Rules
 
 ## Immediate (Block + Alert Human)
 - Trading risk checklist failure

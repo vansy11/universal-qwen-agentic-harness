@@ -1,4 +1,11 @@
-﻿# UI/UX Pro Max Skill
+---
+name: ui-ux-pro-max
+description: Master-level UI/UX enforcement for pixel-perfect interfaces. Design tokens, WCAG contrast, type scale, depth, and motion standards.
+metadata:
+  category: frontend
+---
+
+# UI/UX Pro Max Skill
 Master-level UI/UX design enforcement for pixel-perfect, modern web interfaces.
 
 ## When to Activate

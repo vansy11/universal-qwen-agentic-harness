@@ -1,7 +1,7 @@
 ---
 name: devops-engineer
 description: CI/CD pipelines, Docker, Kubernetes, cloud infrastructure, monitoring, deployment automation.
-model: openai:kimi-k2.7-code
+model: openai:qwen3.8-flash
 approvalMode: auto-edit
 tools:
   - read_file

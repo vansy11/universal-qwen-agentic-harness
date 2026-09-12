@@ -1,7 +1,7 @@
 ---
 name: trading-desk-chief
 description: Trading desk oversight. Coordinates quant, risk, and data teams. Ensures compliance and risk limits.
-model: openai:qwen3.7-max
+model: openai:qwen3.8-max
 approvalMode: auto-edit
 tools:
   - read_file

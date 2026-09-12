@@ -14,7 +14,6 @@ todos/
 usage/
 file-history/
 debug/
-*.jsonl
 tip_history.json
 usage_record.jsonl
 

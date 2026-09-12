@@ -1,4 +1,4 @@
-﻿---
+---
 name: ms-office-engine
 description: Reads and writes Microsoft Office files (.docx, .xlsx, .pptx) locally without hallucination.
 metadata:

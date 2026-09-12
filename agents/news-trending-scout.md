@@ -1,7 +1,7 @@
 ---
 name: news-trending-scout
 description: Real-time news monitoring, trend detection, sentiment analysis, social media tracking, alert generation.
-model: openai:qwen3.6-flash
+model: openai:qwen3.8-flash
 approvalMode: auto-edit
 tools:
   - read_file

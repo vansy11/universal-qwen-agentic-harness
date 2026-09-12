@@ -1,7 +1,7 @@
-﻿---
+---
 name: fullstack-orchestrator
 description: Orchestrates end-to-end autonomous full-stack features. Delegates to specialized agents via the agent tool, manages dependencies, ensures integration, enforces 100% QC, Auto-Eval, and Humanization.
-model: openai:qwen3.7-plus
+model: openai:qwen3.8-max
 approvalMode: auto-edit
 tools:
   - read_file

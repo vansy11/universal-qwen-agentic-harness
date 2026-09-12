@@ -1,4 +1,11 @@
-﻿# Skill: AI Humanizer & Anti-Slop Engine
+---
+name: ai-humanizer-anti-slop
+description: Anti-slop enforcement and humanized UI copy. Bans AI-cliche vocabulary, enforces concise action-oriented interface text.
+metadata:
+  category: frontend
+---
+
+# Skill: AI Humanizer & Anti-Slop Engine
 
 ## STRICT RULES (No Exceptions):
 When generating UI/UX copy, documentation, or comments, you are STRICTLY FORBIDDEN from using "AI Slop" words. 

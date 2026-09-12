@@ -1,4 +1,4 @@
-﻿// quality-gate.js — Stop hook (domain-agnostic)
+// quality-gate.js — Stop hook (domain-agnostic)
 // Universal QC gate that adapts evaluation strategy based on project domain.
 // Domains: web (Playwright), api (endpoint check), python (syntax+run),
 //          quant (param validation), general (slop + structure check)

@@ -46,7 +46,7 @@ The **Universal Qwen Agentic Harness** is an enterprise-grade, event-driven **Or
                                                          │
                                                ┌─────────▼──────────┐
                                                │ Tool & MCP Layer   │
-                                               │ (46 Skills, 15 MCP)│
+                                               │ (55 Skills, 15 MCP)│
                                                └─────────┬──────────┘
                                                          │
                                                ┌─────────▼──────────┐
@@ -162,7 +162,7 @@ Cross-platform Node.js & Python scripts executed automatically by Qwen Code at s
 
 ---
 
-### 2. Technical Skills (46 Skills)
+### 2. Technical Skills (55 Skills)
 
 | Domain                     | Skill                           | Description                                                         |
 | :------------------------- | :------------------------------ | :------------------------------------------------------------------ |

@@ -1,4 +1,4 @@
-﻿---
+---
 name: pdf-extraction
 description: Extracts and reads text content from local PDF files for analysis, summarization, or data extraction.
 metadata:

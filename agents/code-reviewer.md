@@ -1,7 +1,7 @@
 ---
 name: code-reviewer
 description: Code quality review, best practices enforcement, anti-pattern detection, refactoring suggestions.
-model: openai:kimi-k2.7-code
+model: openai:qwen3.8-flash
 approvalMode: auto-edit
 tools:
   - read_file

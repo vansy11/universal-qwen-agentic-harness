@@ -1,4 +1,4 @@
-﻿# Self-Correction Protocol
+# Self-Correction Protocol
 
 When an error is detected in your own output:
 

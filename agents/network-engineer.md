@@ -1,7 +1,7 @@
 ---
 name: network-engineer
 description: Network diagnostics, DNS, firewall rules, routing, TCP/IP troubleshooting, connectivity issues.
-model: openai:kimi-k2.7-code
+model: openai:qwen3.8-flash
 approvalMode: auto-edit
 tools:
   - read_file

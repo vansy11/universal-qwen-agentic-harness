@@ -1,4 +1,4 @@
-﻿// --- ANTI-TYPO LOGIC (LEVENSHTEIN DISTANCE) ---
+// --- ANTI-TYPO LOGIC (LEVENSHTEIN DISTANCE) ---
 function levenshtein(a, b) {
   const matrix = [];
   for (let i = 0; i <= b.length; i++) matrix[i] = [i];
@@ -57,6 +57,11 @@ const skillRouter = (userPrompt) => {
       "ui",
       "css",
       "responsive",
+      "landing",
+      "threejs",
+      "r3f",
+      "webgl",
+      "3d",
     ) ||
     (anyOf(p, "website", "web") &&
       anyOf(p, "3d", "animation", "animate", "gsap", "framer"))
@@ -68,8 +73,22 @@ const skillRouter = (userPrompt) => {
     if (anyOf(p, "3d", "animation", "animate", "gsap", "framer", "motion")) {
       skills.add("skills/ui-animation-gsap-framer/SKILL.md");
     }
+    if (
+      anyOf(p, "3d", "three", "threejs", "r3f", "webgl", "spline", "shader", "glsl")
+    ) {
+      skills.add("skills/threejs-r3f-3d-web/SKILL.md");
+    }
     if (anyOf(p, "design", "system", "token", "palette")) {
       skills.add("skills/ui-ux-design-system/SKILL.md");
+    }
+    if (
+      anyOf(
+        p,
+        "build", "create", "buat", "website", "landing", "page",
+        "fullstack", "fix", "bug", "broken", "layout", "screenshot", "visual",
+      )
+    ) {
+      skills.add("skills/visual-qa-playwright/SKILL.md");
     }
   }
 
@@ -171,11 +190,42 @@ const skillRouter = (userPrompt) => {
     skills.add("skills/finance-analysis/SKILL.md");
     skills.add("skills/derivatives-pricing/SKILL.md");
     skills.add("skills/institutional-econometrics/SKILL.md");
+    skills.add("skills/symbolic-math-verifier/SKILL.md");
     agents.add("agents/quant-algo-engineer.md");
     agents.add("agents/quant-strategist.md");
     agents.add("agents/risk-manager.md");
     agents.add("agents/trading-desk-chief.md");
     agents.add("agents/market-data-engineer.md");
+    if (
+      anyOf(
+        p,
+        "orderflow", "ivb", "footprint", "delta", "auction",
+        "initial balance", "volume profile", "vwap", "microstructure",
+        "orb", "opening range",
+      )
+    ) {
+      skills.add("skills/market-microstructure-orderflow/SKILL.md");
+    }
+    if (
+      anyOf(
+        p,
+        "sizing", "kelly", "risk of ruin", "drawdown", "leverage",
+        "risk per trade", "expectancy", "position size", "lot",
+      )
+    ) {
+      skills.add("skills/position-sizing-risk-math/SKILL.md");
+    }
+  }
+
+  // --- MATH / SYMBOLIC VERIFICATION ---
+  if (
+    anyOf(
+      p,
+      "math", "derive", "derivation", "proof", "equation", "integral",
+      "derivative", "matrix", "probability", "statistics", "formula", "hitung",
+    )
+  ) {
+    skills.add("skills/symbolic-math-verifier/SKILL.md");
   }
 
   // --- DATA / ETL / PIPELINE ---

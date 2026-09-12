@@ -1,7 +1,7 @@
 ---
 name: frontend-engineer
 description: Senior frontend engineer. Builds React/Vue components, responsive UI, state management, performance optimization.
-model: openai:kimi-k2.7-code
+model: openai:qwen3.8-flash
 approvalMode: auto-edit
 tools:
   - read_file

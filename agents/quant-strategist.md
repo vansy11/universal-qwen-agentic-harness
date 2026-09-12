@@ -1,7 +1,7 @@
 ---
 name: quant-strategist
 description: Quantitative trading strategy design, backtesting, alpha research, signal generation for futures markets.
-model: openai:qwen3.7-max
+model: openai:qwen3.8-max
 approvalMode: auto-edit
 tools:
   - read_file

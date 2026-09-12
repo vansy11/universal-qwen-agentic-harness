@@ -1,7 +1,7 @@
 ---
 name: quant-algo-engineer
 description: Implements quantitative algorithms. Signal processing, statistical models, execution logic, backtesting frameworks.
-model: openai:qwen3.7-max
+model: openai:qwen3.8-max
 approvalMode: auto-edit
 tools:
   - read_file

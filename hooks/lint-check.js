@@ -1,4 +1,4 @@
-﻿// lint-check.js — PostToolUse (write_file) hook
+// lint-check.js — PostToolUse (write_file) hook
 // Lightweight static lint on newly written files. Flags TypeScript `any`,
 // debug console statements, and legacy `var`. Emits advisory context only;
 // it never blocks the tool.

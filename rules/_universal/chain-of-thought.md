@@ -1,4 +1,4 @@
-﻿# Chain of Thought Enforcement
+# Chain of Thought Enforcement
 
 All agents MUST include structured reasoning before substantive output.
 See: skills/_core/chain-of-thought/SKILL.md

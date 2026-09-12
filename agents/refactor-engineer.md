@@ -1,7 +1,7 @@
 ---
 name: refactor-engineer
 description: Systematic debugging, root cause analysis, legacy code refactoring, performance optimization.
-model: openai:kimi-k2.7-code
+model: openai:qwen3.8-flash
 approvalMode: auto-edit
 tools:
   - read_file

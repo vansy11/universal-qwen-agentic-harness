@@ -1,4 +1,4 @@
-﻿# Security Baseline (All Languages)
+# Security Baseline (All Languages)
 
 ## Secrets Management
 - NEVER hardcode API keys, passwords, tokens, or credentials

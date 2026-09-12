@@ -1,4 +1,4 @@
-﻿// core/eval-runner.js — headless runtime evaluator for generated web apps.
+// core/eval-runner.js — headless runtime evaluator for generated web apps.
 //
 // Degrades gracefully and never false-blocks delivery:
 //   1. Uses Playwright (full browser checks) when available.

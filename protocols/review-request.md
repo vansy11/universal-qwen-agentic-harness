@@ -1,4 +1,4 @@
-﻿# Review Request Template
+# Review Request Template
 
 ## Standard Format
 
